@@ -265,7 +265,13 @@ body {
 .progress-fill { height: 100%; background: var(--accent); width: 0%; box-shadow: 0 0 10px var(--accent-soft); }
 
 /* Controls */
-.controls-area { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.controls-area { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 20px; 
+    flex-wrap: wrap; /* Erlaubt Umbruch, falls nötig */
+}
 
 .control-btn {
   width: 44px; height: 44px; border-radius: 50%; background: transparent;
@@ -285,10 +291,63 @@ body {
 .control-main:hover { transform: scale(1.08); }
 .control-main svg { width: 30px; height: 30px; }
 
-.volume-row { display: flex; align-items: center; gap: 10px; width: 150px; margin-left: auto; }
-.volume-icon { color: var(--text-muted); }
-.volume-slider { flex: 1; height: 4px; background: var(--bg-card-light); border-radius: 2px; cursor: pointer; }
-.volume-fill { height: 100%; background: var(--text-muted); width: 50%; border-radius: 2px; }
+/* --- NEUE STYLES FÜR LAUTSTÄRKE --- */
+.volume-control-area {
+    width: 100%;
+    margin-top: 15px; /* Abstand zu den oberen Buttons */
+    display: flex;
+    justify-content: center;
+}
+
+.volume-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    width: 70%; /* Breiter als zuvor */
+    max-width: 300px;
+}
+.volume-icon { 
+    color: var(--text-muted); 
+    cursor: pointer;
+}
+.volume-icon:hover {
+    color: var(--text-main);
+}
+
+/* --- Moderner Input-Range-Slider --- */
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background: var(--bg-card-light);
+    border-radius: 5px;
+    outline: none;
+    transition: opacity .2s;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--text-main);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--text-main);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+}
+
+/* Entfernt: .volume-fill, da der Slider jetzt direkt gestylt wird. */
+
 
 /* =========================================
    EXTRAS COLUMN (Rechts)
@@ -421,4 +480,119 @@ body {
 
 :root[data-theme="light"] .track-row:hover {
     background: #f3f4f6;
+}
+
+/* =========================================
+   SETTINGS MODAL
+   ========================================= */
+
+.overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.settings-modal {
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.settings-header .panel-title {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.settings-header .control-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-soft);
+}
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item label {
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.setting-item .input-group {
+    width: 60%;
+    margin-bottom: 0;
+}
+
+.setting-item select {
+    width: 60%;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+.toggle-switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-card-light);
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--accent);
+}
+input:checked + .slider:before {
+  transform: translateX(16px);
 }

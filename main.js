@@ -1,160 +1,189 @@
-// main.js
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const path = require("path");
-const fs = require("fs");
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const path = require('path');
+const fs = require('fs').promises;
+const mm = require('music-metadata');
+const YTDlpWrap = require('yt-dlp-wrap').default;
+const Store = require('electron-store');
 
-// yt-dlp-wrap: wichtig ist das .default
-const YTDlpWrap = require("yt-dlp-wrap").default;
+// Initialisiere electron-store
+const store = new Store({
+    defaults: {
+        downloadFolder: app.getPath('downloads'),
+        audioQuality: 'best',
+        animationsEnabled: true,
+    }
+});
 
-// GPU-Disk-Cache deaktivieren (beseitigt "Unable to create cache / Gpu Cache Creation failed")
-app.commandLine.appendSwitch("disable-gpu-shader-disk-cache");
-app.commandLine.appendSwitch("disable-gpu-program-cache");
-
-const SUPPORTED = [".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aac", ".webm"];
+const SUPPORTED_EXTENSIONS = ['.mp3', '.m4a', '.flac', '.wav', '.ogg'];
 
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 1600,
-    height: 1000,
-    autoHideMenuBar: true,
-    backgroundColor: "#050816",
-    icon: path.join(__dirname, "assets", "icon.png"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
+    const win = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        minWidth: 940,
+        minHeight: 600,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            nodeIntegration: false,
+        },
+        autoHideMenuBar: true,
+        icon: path.join(__dirname, 'assets/icon.png'),
+        backgroundColor: '#0a0e1b',
+        show: false,
+    });
 
-  win.loadFile("index.html");
-
-  // Sicherheit: keine neuen Fenster durch Links öffnen lassen
-  win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+    win.loadFile('index.html');
+    win.once('ready-to-show', () => {
+        win.show();
+    });
 }
 
-// Lokale Musik-Ordner-Auswahl
-ipcMain.handle("select-folder", async () => {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ["openDirectory"],
-  });
-
-  if (canceled || !filePaths || !filePaths[0]) {
-    return { folder: null, tracks: [] };
-  }
-
-  const dir = filePaths[0];
-  const files = await fs.promises.readdir(dir);
-
-  const tracks = files
-    .filter((f) => SUPPORTED.includes(path.extname(f).toLowerCase()))
-    .map((f) => ({
-      title: path.basename(f, path.extname(f)),
-      displayName: f,
-      path: path.join(dir, f),
-    }));
-
-  return { folder: dir, tracks };
+// --- IPC-Handler für EINSTELLUNGEN ---
+ipcMain.handle('get-settings', () => {
+    return store.store;
 });
 
-// YouTube / URL → MP3 Downloader mit Progress-Events
-ipcMain.handle("yt-download", async (event, { url, dir, name }) => {
-  try {
-    if (!url || !dir) {
-      return {
-        success: false,
-        error: "URL oder Zielordner fehlt.",
-      };
+ipcMain.handle('set-setting', (event, key, value) => {
+    store.set(key, value);
+});
+
+ipcMain.handle('select-folder', async () => {
+    const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (!result.canceled && result.filePaths.length > 0) {
+        return result.filePaths[0];
     }
+    return null;
+});
 
-    // yt-dlp Binary (wird intern gecached, also nicht jedes Mal neu geladen)
-    const binaryPath = await YTDlpWrap.downloadFromGithub();
-    const ytDlpWrap = new YTDlpWrap(binaryPath);
 
-    // Dateiname absichern
-    const safeName = name
-      ? name.replace(/[\/\\?%*:|"<>]/g, "_")
-      : "%(uploader)s - %(title)s";
+// --- IPC-Handler für MUSIK & DOWNLOADS ---
+ipcMain.handle('select-music-folder', async () => {
+    const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+    if (result.canceled || result.filePaths.length === 0) {
+        return { tracks: null };
+    }
+    const folderPath = result.filePaths[0];
+    const files = await fs.readdir(folderPath);
+    const trackPromises = files
+        .filter(file => SUPPORTED_EXTENSIONS.includes(path.extname(file).toLowerCase()))
+        .map(async (file) => {
+            const filePath = path.join(folderPath, file);
+            try {
+                const metadata = await mm.parseFile(filePath);
+                return {
+                    path: filePath,
+                    title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
+                    artist: metadata.common.artist || 'Unbekannt',
+                    duration: metadata.format.duration || 0,
+                };
+            } catch (error) {
+                console.warn(`Metadaten konnten nicht gelesen werden für: ${file}`, error);
+                return null;
+            }
+        });
+    const tracks = (await Promise.all(trackPromises)).filter(Boolean);
+    return { tracks };
+});
 
-    const outputTemplate = path.join(dir, `${safeName}.%(ext)s`);
+ipcMain.handle('get-cover', async (event, filePath) => {
+    try {
+        const metadata = await mm.parseFile(filePath);
+        const cover = mm.selectCover(metadata.common.picture);
+        return cover ? `data:${cover.format};base64,${cover.data.toString('base64')}` : null;
+    } catch (error) {
+        console.error('Fehler beim Extrahieren des Covers:', error);
+        return null;
+    }
+});
 
-    // yt-dlp starten – NICHT execPromise, sondern exec, damit wir Events bekommen
-    const child = ytDlpWrap.exec([
-      url,
-      "-x", // Audio extrahieren
-      "--audio-format",
-      "mp3",
-      "--audio-quality",
-      "0", // beste Qualität
-      "--embed-thumbnail",
-      "--add-metadata",
-      "-o",
-      outputTemplate,
-    ]);
-
-    // Progress-Events nach Renderer schicken
-    child.on("progress", (progress) => {
-      // progress.percent ist typischerweise eine Zahl (0–100)
-      // manche Felder sind Strings, das ist aber egal – wir schicken einfach durch
-      event.sender.send("yt-download-progress", {
-        percent: progress.percent,
-        totalSize: progress.totalSize,
-        downloaded: progress.downloaded,
-        eta: progress.eta,
-      });
-    });
-
-    // Allgemeine Events (optional für Logging)
-    child.on("ytDlpEvent", (data) => {
-      // Kannst du zum Debuggen nutzen, aktuell nur Log
-      // console.log("yt-dlp event:", data);
-    });
-
-    // Promise, das resolved, wenn yt-dlp fertig ist
-    const result = await new Promise((resolve, reject) => {
-      child.once("close", (code) => {
-        if (code === 0) {
-          resolve({
-            success: true,
-            message: `Fertig! ${
-              name ? `${name}.mp3` : "Datei(en)"
-            } gespeichert. Lade den Ordner neu.`,
-          });
-        } else {
-          reject(new Error(`yt-dlp ist mit Code ${code} beendet.`));
+ipcMain.handle('download-from-youtube', async (event, { url, customName, quality }) => {
+    console.log(`Starting download for URL: ${url} with quality: ${quality}`);
+    try {
+        let downloadFolder = store.get('downloadFolder');
+        if (!downloadFolder) {
+            console.log('No download folder set, asking user.');
+            const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+            if (result.canceled || result.filePaths.length === 0) {
+                console.log('User canceled folder selection.');
+                return { success: false, error: 'Download folder selection was canceled.' };
+            }
+            downloadFolder = result.filePaths[0];
+            store.set('downloadFolder', downloadFolder);
+            console.log(`Download folder set to: ${downloadFolder}`);
         }
-      });
 
-      child.once("error", (err) => {
-        reject(err);
-      });
-    });
+        const ytDlpPath = await YTDlpWrap.downloadFromGithub();
+        const ytDlpWrap = new YTDlpWrap(ytDlpPath);
+        
+        const qualityMap = {
+            best: '0',
+            high: '5', // Corresponds to VBR quality in mp3
+            standard: '9', // Lower VBR quality
+        };
 
-    return result;
-  } catch (e) {
-    console.error("yt-dlp Fehler-Details:", e);
-    return {
-      success: false,
-      error: e.message || "Download fehlgeschlagen (prüfe URL/Internet).",
-    };
-  }
-});
+        const fileNameTemplate = customName ? `${customName}.%(ext)s` : '%(title)s.%(ext)s';
+        const outputPath = path.join(downloadFolder, fileNameTemplate);
 
-// App-Lebenszyklus
-app.whenReady().then(() => {
-  // Für korrektes Icon im Task-Manager / Notifications
-  app.setAppUserModelId("com.snuggledino.novawave");
+        const process = ytDlpWrap.exec([
+            url, '-x',
+            '--audio-format', 'mp3',
+            '--audio-quality', qualityMap[quality] || '0',
+            '--embed-thumbnail', '--add-metadata',
+            '-o', outputPath,
+        ]);
+        
+        // --- Enhanced Logging ---
+        let stdErrOutput = [];
+        process.on('progress', (progress) => {
+            event.sender.send('download-progress', { percent: progress.percent });
+        });
+        
+        process.on('ytDlpEvent', (type, data) => {
+            // This captures both stdout and stderr
+            console.log(`[yt-dlp] ${type}: ${data}`);
+            if(type === 'stderr') {
+                stdErrOutput.push(data);
+            }
+        });
 
-  createWindow();
+        await new Promise((resolve, reject) => {
+            process.on('close', (code) => {
+                if (code === 0) {
+                    console.log('Download finished successfully.');
+                    resolve();
+                } else {
+                    console.error(`yt-dlp process exited with code ${code}.`);
+                    // Join stderr output to create a more informative error message
+                    reject(new Error(`yt-dlp exited with code ${code}: ${stdErrOutput.join('\n')}`));
+                }
+            });
+            process.on('error', (err) => {
+                console.error('Failed to start yt-dlp process:', err);
+                reject(err);
+            });
+        });
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+        return { success: true, path: outputPath };
+
+    } catch (error) {
+        console.error('--- YouTube Download Error ---');
+        console.error(error);
+        return { success: false, error: error.message };
     }
-  });
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+// --- App-Lebenszyklus ---
+app.whenReady().then(createWindow);
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });

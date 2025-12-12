@@ -17,16 +17,16 @@
     "appId": "com.snuggledino.novawave",
     "productName": "NovaWave Music Player",
     "files": [
-  "index.html",
-  "main.js",
-  "preload.js",
-  "renderer.js",
-  "style.css",
-  "package.json",
-  "downloads/**/*",
-  "assets/**/*",
-  "yt-dlp.exe"
-],
+      "index.html",
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "style.css",
+      "package.json",
+      "downloads/**/*",
+      "assets/**/*",
+      "yt-dlp.exe"
+    ],
     "directories": {
       "buildResources": "assets"
     },
@@ -36,6 +36,8 @@
     }
   },
   "dependencies": {
-  "yt-dlp-wrap": "^2.3.12"
+    "electron-store": "^11.0.2",
+    "music-metadata": "^11.10.3",
+    "yt-dlp-wrap": "^2.3.12"
   }
 }

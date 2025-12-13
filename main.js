@@ -18,9 +18,9 @@ const SUPPORTED_EXTENSIONS = ['.mp3', '.m4a', '.flac', '.wav', '.ogg'];
 function createWindow() {
     const win = new BrowserWindow({
         width: 1300,
-        height: 850,
-        minWidth: 820,
-        minHeight: 680,
+        height: 900,
+        minWidth: 700,
+        minHeight: 720,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,

@@ -30,7 +30,7 @@ let $, trackTitleEl, trackArtistEl, musicEmojiEl, currentTimeEl, durationEl, pro
 
 const translations = {
     de: {
-        appTitle: 'Musik-Player', appSubtitle: 'Lokal & YouTube',
+        appTitle: 'NovaWave - Musik Player', appSubtitle: 'Lokal & YouTube',
         nothingPlaying: 'Nichts spielt', unknownArtist: 'Unbekannter Künstler',
         loadFolder: 'Ordner laden', searchPlaceholder: 'Playlist durchsuchen...',
         emptyPlaylist: 'Playlist ist leer. Lade einen Ordner!',
@@ -51,7 +51,7 @@ const translations = {
         sortNewest: 'Zuletzt geändert', sortNameAZ: 'Name A-Z', sortNameZA: 'Name Z-A',
     },
     en: {
-        appTitle: 'Music Player', appSubtitle: 'Local & YouTube',
+        appTitle: 'NovaWave - Music Player', appSubtitle: 'Local & YouTube',
         nothingPlaying: 'Nothing Playing', unknownArtist: 'Unknown Artist',
         loadFolder: 'Load Folder', searchPlaceholder: 'Search playlist...',
         emptyPlaylist: 'Playlist is empty. Load a folder!',

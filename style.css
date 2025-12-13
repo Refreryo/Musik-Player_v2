@@ -23,8 +23,8 @@
     --bg-main: #000000;
     --bg-card: #121212;
     --bg-card-light: #1e1e1e;
-    --accent: #bb86fc;
-    --accent-soft: rgba(187, 134, 252, 0.15);
+    --accent: #10b981;
+    --accent-soft: rgba(16, 185, 129, 0.15);
     --text-main: #ffffff;
     --text-muted: #b0b0b0;
     --border-soft: #333333;
@@ -158,7 +158,7 @@ input, textarea { user-select: text; }
 .main-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 420px;
   gap: 24px;
   padding: 24px;
   overflow: hidden;
@@ -215,11 +215,18 @@ input, textarea { user-select: text; }
 .music-emoji {
   font-size: 120px;
   animation: float 3s ease-in-out infinite;
+  transition: transform 0.1s ease-out;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1); }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-30px) scale(1.1); }
+  100% { transform: translateY(0px) scale(1); }
 }
 
 .track-info-area { text-align: center; margin-top: 20px;}
@@ -418,9 +425,10 @@ input:checked + .slider:before { transform: translateX(16px); }
    ========================================= */
 
 @media (max-width: 1350px) {
-  .main-grid { grid-template-columns: 1fr 360px; gap: 20px; padding: 20px; }
+  .main-grid { grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; }
   .cover-art-wrapper { width: 240px; height: 240px; }
   .music-emoji { font-size: 110px; }
+  .volume-row { width: 75%; }
 }
 
 @media (max-width: 1200px) {

@@ -164,13 +164,15 @@ input, textarea { user-select: text; }
   grid-template-columns: 1fr 420px;
   gap: 24px;
   padding: 24px;
-  overflow-y: auto;
+  overflow: hidden;
+  min-height: 0; /* Verhindert, dass das Grid überläuft */
 }
 
 .player-column, .extras-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: hidden; /* Verhindert, dass die Spalten ihren Inhalt überlaufen lassen */
 }
 
 .player-column {

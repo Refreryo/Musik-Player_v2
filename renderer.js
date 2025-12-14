@@ -1269,3 +1269,6 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeIcon.innerHTML = getVolumeIcon(currentVolume);
 
 });
+let trackRowElements = [];
+
+

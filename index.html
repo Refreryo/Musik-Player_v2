@@ -21,16 +21,29 @@
                 </div>
             </div>
             <div class="header-right">
-                <div class="lang-switch">
-                    <button class="lang-btn active" data-lang="de">DE</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
+                <div class="header-item">
+                    <div class="mini-mode-switch-container" title="Mini Player Mode">
+                        <span class="mini-mode-label">MINI</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-mini-mode">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
-                <button id="toggle-downloader-btn" class="control-btn" data-lang-title="toggleDownloader">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                </button>
-                <button id="settings-btn" class="control-btn" data-lang-title="settings">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                </button>
+                <div class="header-item">
+                    <div class="lang-switch">
+                        <button class="lang-btn active" data-lang="de">DE</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                </div>
+                <div class="header-item">
+                    <button id="toggle-downloader-btn" class="control-btn" style="margin-right: 12px;" data-lang-title="toggleDownloader">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </button>
+                    <button id="settings-btn" class="control-btn" data-lang-title="settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -146,6 +159,7 @@
                                 <option value="blurple" data-lang-key="blurpleTheme"></option>
                                 <option value="grey" data-lang-key="greyTheme"></option>
                                 <option value="darkrose" data-lang-key="darkroseTheme"></option>
+                                <option value="dinolove" data-lang-key="dinoloveTheme">Dinolove</option>
                             </select>
                         </div>
                     </div>
@@ -155,10 +169,12 @@
                             <p data-lang-key="backgroundAnimationDescription"></p>
                         </div>
                         <div class="setting-control">
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="toggle-background-animation">
-                                <span class="slider"></span>
-                            </label>
+                            <select id="animation-select" class="settings-select">
+                                <option value="off" data-lang-key="animOff"></option>
+                                <option value="flow" data-lang-key="animFlow"></option>
+                                <option value="nebula" data-lang-key="animNebula"></option>
+                                <option value="rainbow" data-lang-key="animRainbow"></option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -236,7 +252,6 @@
                         </div>
                         <div class="setting-control">
                              <select id="audio-quality-select" class="settings-select">
-                                <option value="best" data-lang-key="qualityBest"></option>
                                 <option value="high" data-lang-key="qualityHigh"></option>
                                 <option value="standard" data-lang-key="qualityStandard"></option>
                             </select>

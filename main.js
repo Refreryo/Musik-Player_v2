@@ -25,8 +25,8 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1300,
         height: 900,
-        minWidth: 700,
-        minHeight: 720,
+        minWidth: 320,
+        minHeight: 450,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -151,50 +151,14 @@ function registerIpcHandlers(store) {
         }
         const folderPath = result.filePaths[0];
         const files = await fs.readdir(folderPath);
-        const trackPromises = files
-            .filter(file => SUPPORTED_EXTENSIONS.includes(path.extname(file).toLowerCase()))
-            .map(async (file) => {
-                const filePath = path.join(folderPath, file);
-                try {
-                    const metadata = await mm.parseFile(filePath);
-                    const stat = await fs.stat(filePath);
-                    return {
-                        path: filePath,
-                        title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
-                        artist: metadata.common.artist || 'Unbekannt',
-                        duration: metadata.format.duration || 0,
-                        mtime: stat.mtimeMs || 0,
-                    };
-                } catch (error) {
-                    return null;
-                }
-            });
-        const tracks = (await Promise.all(trackPromises)).filter(Boolean);
+        const tracks = await processTracksInBatches(files, folderPath);
         return { tracks, folderPath };
     });
 
     ipcMain.handle('refresh-music-folder', async (event, folderPath) => {
         try {
             const files = await fs.readdir(folderPath);
-            const trackPromises = files
-                .filter(file => SUPPORTED_EXTENSIONS.includes(path.extname(file).toLowerCase()))
-                .map(async (file) => {
-                    const filePath = path.join(folderPath, file);
-                    try {
-                        const metadata = await mm.parseFile(filePath);
-                        const stat = await fs.stat(filePath);
-                        return {
-                            path: filePath,
-                            title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
-                            artist: metadata.common.artist || 'Unbekannt',
-                            duration: metadata.format.duration || 0,
-                            mtime: stat.mtimeMs || 0,
-                        };
-                    } catch (error) {
-                        return null;
-                    }
-                });
-            const tracks = (await Promise.all(trackPromises)).filter(Boolean);
+            const tracks = await processTracksInBatches(files, folderPath);
             return { tracks, folderPath };
         } catch (error) {
             console.error('Error refreshing music folder:', error);
@@ -233,6 +197,13 @@ function registerIpcHandlers(store) {
         } catch (error) {
             console.error('Error deleting track:', error);
             return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.on('set-window-size', (event, { width, height }) => {
+        const win = BrowserWindow.fromWebContents(event.sender);
+        if (win) {
+            win.setSize(width, height, true);
         }
     });
 
@@ -298,3 +269,33 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+async function processTracksInBatches(files, folderPath) {
+    const validFiles = files.filter(file => SUPPORTED_EXTENSIONS.includes(path.extname(file).toLowerCase()));
+    const tracks = [];
+    const batchSize = 10; 
+
+    for (let i = 0; i < validFiles.length; i += batchSize) {
+        const batch = validFiles.slice(i, i + batchSize);
+        const batchPromises = batch.map(async (file) => {
+            const filePath = path.join(folderPath, file);
+            try {
+                // mm is available in outer scope because it is defined at top level
+                const metadata = await mm.parseFile(filePath, { skipCovers: true, duration: true });
+                const stat = await fs.stat(filePath);
+                return {
+                    path: filePath,
+                    title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
+                    artist: metadata.common.artist || 'Unbekannt',
+                    duration: metadata.format.duration || 0,
+                    mtime: stat.mtimeMs || 0,
+                };
+            } catch (error) {
+                return null;
+            }
+        });
+        const batchResults = await Promise.all(batchPromises);
+        tracks.push(...batchResults.filter(Boolean));
+    }
+    return tracks;
+}

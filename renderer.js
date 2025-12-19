@@ -22,12 +22,14 @@ let contextTrackIndex = null;
 
 // Visualizer State
 let audioContext, analyser, sourceNode;
+let visualizerDataArray;
 let visualizerRunning = false;
 
 // DOM Elements (will be assigned on DOMContentLoaded)
-let $, trackTitleEl, trackArtistEl, musicEmojiEl, currentTimeEl, durationEl, progressBar, progressFill, playBtn, playIcon, pauseIcon, prevBtn, nextBtn, loopBtn, shuffleBtn, volumeSlider, volumeIcon, playlistEl, playlistInfoBar, loadFolderBtn, searchInput, sortSelect, ytUrlInput, ytNameInput, downloadBtn, downloadStatusEl, downloadProgressFill, visualizerCanvas, visualizerContainer, langButtons, settingsBtn, settingsOverlay, settingsCloseBtn, downloadFolderInput, changeFolderBtn, qualitySelect, themeSelect, visualizerToggle, animationToggle, backgroundAnimationEl, emojiSelect, customEmojiContainer, customEmojiInput, toggleDownloaderBtn, downloaderPanel, contextMenu, contextMenuEditTitle, editTitleOverlay, editTitleInput, originalTitlePreview, newTitlePreview, editTitleCancelBtn, editTitleSaveBtn, confirmDeleteOverlay, confirmDeleteBtn, confirmDeleteCancelBtn, autoLoadLastFolderToggle;
+let $, trackTitleEl, trackArtistEl, musicEmojiEl, currentTimeEl, durationEl, progressBar, progressFill, playBtn, playIcon, pauseIcon, prevBtn, nextBtn, loopBtn, shuffleBtn, volumeSlider, volumeIcon, playlistEl, playlistInfoBar, loadFolderBtn, searchInput, sortSelect, ytUrlInput, ytNameInput, downloadBtn, downloadStatusEl, downloadProgressFill, visualizerCanvas, visualizerContainer, langButtons, settingsBtn, settingsOverlay, settingsCloseBtn, downloadFolderInput, changeFolderBtn, qualitySelect, themeSelect, visualizerToggle, animationSelect, backgroundAnimationEl, emojiSelect, customEmojiContainer, customEmojiInput, toggleDownloaderBtn, downloaderPanel, contextMenu, contextMenuEditTitle, editTitleOverlay, editTitleInput, originalTitlePreview, newTitlePreview, editTitleCancelBtn, editTitleSaveBtn, confirmDeleteOverlay, confirmDeleteBtn, confirmDeleteCancelBtn, autoLoadLastFolderToggle;
 
 let trackToDeletePath = null;
+let toggleMiniMode;
 
 // =================================================================================
 // TRANSLATIONS
@@ -64,7 +66,7 @@ const translations = {
 
         backgroundAnimation: 'Hintergrundanimation',
 
-        blueTheme: 'Blau', darkTheme: 'Dunkel', lightTheme: 'Hell', blurpleTheme: 'Blurple', greyTheme: 'Grau', darkroseTheme: 'Dark Rose',
+        blueTheme: 'Ocean Blue', darkTheme: 'Midnight', lightTheme: 'Daylight', blurpleTheme: 'Nebula', greyTheme: 'Graphite', darkroseTheme: 'Crimson', dinoloveTheme: 'Dinolove',
 
         shuffle: 'Zufallswiedergabe', previous: 'Zurück', playPause: 'Abspielen/Pause',
 
@@ -108,6 +110,7 @@ const translations = {
         autoLoadLastFolder: 'Zuletzt benutzten Ordner automatisch laden',
         autoLoadLastFolderDescription: 'Wenn aktiviert, wird der zuletzt benutzte Ordner beim Start der App automatisch geladen.',
 
+        animOff: 'Aus', animFlow: 'Flow', animNebula: 'Nebula', animRainbow: 'Regenbogen',
     },
 
     en: {
@@ -139,7 +142,7 @@ const translations = {
 
         backgroundAnimation: 'Background Animation',
 
-        blueTheme: 'Blue', darkTheme: 'Dark', lightTheme: 'Light', blurpleTheme: 'Blurple', greyTheme: 'Grey', darkroseTheme: 'Dark Rose',
+        blueTheme: 'Ocean Blue', darkTheme: 'Midnight', lightTheme: 'Daylight', blurpleTheme: 'Nebula', greyTheme: 'Graphite', darkroseTheme: 'Crimson', dinoloveTheme: 'Dinolove',
 
         shuffle: 'Shuffle', previous: 'Previous', playPause: 'Play/Pause',
 
@@ -182,6 +185,8 @@ const translations = {
 
         autoLoadLastFolder: 'Automatically load last used folder',
         autoLoadLastFolderDescription: 'If enabled, the last used folder will be loaded automatically when the app starts.',
+
+        animOff: 'Off', animFlow: 'Flow', animNebula: 'Nebula', animRainbow: 'Rainbow',
     }
 
 };
@@ -364,48 +369,70 @@ function updateActiveTrackInPlaylist() {
 }
 
 
+let renderPlaylistRequestId = null;
+
 function renderPlaylist() {
     if (!playlistEl) return;
+    
+    // Cancel any ongoing render to prevent overlap
+    if (renderPlaylistRequestId) {
+        cancelAnimationFrame(renderPlaylistRequestId);
+        renderPlaylistRequestId = null;
+    }
+    
     playlistEl.innerHTML = '';
+    
     if (playlist.length === 0) {
         playlistEl.innerHTML = `<div class="empty-state">${tr('emptyPlaylist')}</div>`;
         playlistInfoBar.textContent = `0 ${tr('tracks')}`;
         return;
     }
+    
+    playlistInfoBar.textContent = `${playlist.length} ${playlist.length === 1 ? tr('track') : tr('tracks')}`;
 
-    const fragment = document.createDocumentFragment();
-    playlist.forEach((track, index) => {
-        const row = document.createElement('div');
-        row.className = 'track-row';
-        row.dataset.index = index; // Essential for delegation and efficient updates
-        if (index === currentIndex) row.classList.add('active');
+    let renderIndex = 0;
+    const CHUNK_SIZE = 50;
 
-        const playingIcon = `<svg class="track-playing-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
-        const deleteButtonHtml = deleteSongsEnabled ? `
-            <button class="delete-track-btn" data-path="${track.path}" title="${tr('deleteSong')}" data-lang-title="deleteSong">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-            </button>` : '';
+    function renderChunk() {
+        const fragment = document.createDocumentFragment();
+        const limit = Math.min(renderIndex + CHUNK_SIZE, playlist.length);
 
-        // Only render the icon if playing AND active. Otherwise index.
-        const indexDisplay = (isPlaying && index === currentIndex) ? playingIcon : (index + 1);
+        for (let i = renderIndex; i < limit; i++) {
+            const track = playlist[i];
+            const row = document.createElement('div');
+            row.className = 'track-row';
+            row.dataset.index = i;
+            if (i === currentIndex) row.classList.add('active');
 
-        row.innerHTML = `
-            <div class="track-index">${indexDisplay}</div>
-            <div class="track-info-block">
-                <div class="track-title-small">${track.title}</div>
-                <div class="track-artist-small">${track.artist || tr('unknownArtist')}</div>
-            </div>
-            <div class="track-duration">${formatTime(track.duration)}</div>
-            ${deleteButtonHtml}
-        `;
+            const playingIcon = `<svg class="track-playing-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+            const deleteButtonHtml = deleteSongsEnabled ? `
+                <button class="delete-track-btn" data-path="${track.path}" title="${tr('deleteSong')}" data-lang-title="deleteSong">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                </button>` : '';
 
-        // Removed individual event listeners for performance
-        fragment.appendChild(row);
-    });
+            const indexDisplay = (isPlaying && i === currentIndex) ? playingIcon : (i + 1);
 
-    playlistEl.appendChild(fragment);
-    const trackCount = playlist.length;
-    playlistInfoBar.textContent = `${trackCount} ${trackCount === 1 ? tr('track') : tr('tracks')}`;
+            row.innerHTML = `
+                <div class="track-index">${indexDisplay}</div>
+                <div class="track-info-block">
+                    <div class="track-title-small">${track.title}</div>
+                    <div class="track-artist-small">${track.artist || tr('unknownArtist')}</div>
+                </div>
+                <div class="track-duration">${formatTime(track.duration)}</div>
+                ${deleteButtonHtml}
+            `;
+            fragment.appendChild(row);
+        }
+
+        playlistEl.appendChild(fragment);
+        renderIndex = limit;
+
+        if (renderIndex < playlist.length) {
+            renderPlaylistRequestId = requestAnimationFrame(renderChunk);
+        }
+    }
+
+    renderChunk();
 }
 
 
@@ -555,31 +582,20 @@ async function handleDownload() {
 
 
 function setupVisualizer() {
-
     if (audioContext) return; // Already setup
 
     try {
-
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
         sourceNode = audioContext.createMediaElementSource(audio);
-
         analyser = audioContext.createAnalyser();
-
         analyser.fftSize = 256;
-
         sourceNode.connect(analyser);
-
         analyser.connect(audioContext.destination);
-
+        visualizerDataArray = new Uint8Array(analyser.frequencyBinCount);
     } catch (e) {
-
         console.error("Failed to initialize visualizer:", e);
-
         visualizerEnabled = false; // Disable if setup fails
-
     }
-
 }
 
 
@@ -631,21 +647,21 @@ function drawVisualizer() {
 
     requestAnimationFrame(drawVisualizer);
 
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    analyser.getByteFrequencyData(dataArray);
+    if (!visualizerDataArray) return;
+    analyser.getByteFrequencyData(visualizerDataArray);
 
     const ctx = visualizerCanvas.getContext('2d');
     const { width, height } = visualizerCanvas;
     ctx.clearRect(0, 0, width, height);
 
+    const bufferLength = analyser.frequencyBinCount;
     const halfBuffer = bufferLength / 2;
     const barWidth = (width / halfBuffer) / 2;
     let x = 0;
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent');
 
     for (let i = 0; i < halfBuffer; i++) {
-        const barHeight = (dataArray[i] / 255) * height * 0.9;
+        const barHeight = (visualizerDataArray[i] / 255) * height * 0.9;
         ctx.fillStyle = accentColor;
         // Draw right bar
         ctx.fillRect(width / 2 + x, height - barHeight, barWidth, barHeight);
@@ -656,7 +672,7 @@ function drawVisualizer() {
 
     // Emoji Animation
     if (musicEmojiEl && !isNaN(audio.currentTime)) {
-        const bassBins = dataArray.slice(0, 2);
+        const bassBins = visualizerDataArray.slice(0, 2);
         const bassLevel = bassBins.reduce((a, b) => a + b, 0) / bassBins.length;
         const floatAmplitude = 10;
         const floatY = Math.sin(audio.currentTime * 2) * floatAmplitude;
@@ -796,7 +812,15 @@ async function loadSettings() {
     // UI elements
     if (downloadFolderInput) { downloadFolderInput.value = settings.downloadFolder; }
     if (qualitySelect) { qualitySelect.value = settings.audioQuality; }
-    if (animationToggle) { animationToggle.checked = settings.animationsEnabled; }
+    if (animationSelect) {
+        let mode = settings.animationMode;
+        if (!mode) {
+             // Fallback for old settings
+             mode = (settings.animationsEnabled !== false) ? 'flow' : 'off';
+        }
+        animationSelect.value = mode;
+        applyAnimationSetting(mode);
+    }
     if (themeSelect) { themeSelect.value = settings.theme || 'blue'; }
     if (visualizerToggle) {
         visualizerToggle.checked = settings.visualizerEnabled !== false;
@@ -844,7 +868,7 @@ async function loadSettings() {
     }
 
     // Apply loaded settings to UI
-    if (backgroundAnimationEl) { applyAnimationSetting(settings.animationsEnabled); }
+    // applyAnimationSetting is called above
     if (shuffleBtn) { shuffleBtn.classList.toggle('mode-btn--active', shuffleOn); }
     if (loopBtn) { loopBtn.classList.toggle('mode-btn--active', loopMode !== 'off'); }
     if (langButtons) { langButtons.forEach(b => b.classList.toggle('active', b.dataset.lang === currentLanguage)); }
@@ -852,10 +876,15 @@ async function loadSettings() {
 
 
 
-function applyAnimationSetting(enabled) {
-
-    backgroundAnimationEl.style.display = enabled ? 'block' : 'none';
-
+function applyAnimationSetting(mode) {
+    if (!backgroundAnimationEl) return;
+    backgroundAnimationEl.className = 'background-animation'; // Reset classes
+    if (mode && mode !== 'off') {
+        backgroundAnimationEl.style.display = 'block';
+        backgroundAnimationEl.classList.add(`type-${mode}`);
+    } else {
+        backgroundAnimationEl.style.display = 'none';
+    }
 }
 
 
@@ -1135,32 +1164,29 @@ function setupEventListeners() {
         
 
             bind(refreshFolderBtn, 'click', async () => {
-
                 if (!currentFolderPath) return;
-
         
-
                 const result = await window.api.refreshMusicFolder(currentFolderPath);
-
                 if (result && result.tracks) {
-
                     basePlaylist = result.tracks;
-
-                    playlist = [...basePlaylist];
-
-                    currentIndex = -1; // Reset current index as tracks might have changed
-
-                    renderPlaylist();
-
+                    // Re-apply sort which updates playlist and renders it
+                    sortPlaylist(sortMode);
                     updateUIForCurrentTrack();
-
                 } else if (result && result.error) {
-
                     alert(`${tr('statusError')}: ${result.error}`);
-
                 }
-
             });
+
+    bind(toggleMiniMode, 'change', (e) => {
+        const isMini = e.target.checked;
+        if (isMini) {
+            // Switch to Mini Mode
+            window.api.setWindowSize(340, 520);
+        } else {
+            // Switch back to Normal Mode
+            window.api.setWindowSize(1300, 900);
+        }
+    });
 
     bind(searchInput, 'input', (e) => filterPlaylist(e.target.value));
 
@@ -1276,14 +1302,12 @@ function setupEventListeners() {
 
     });
 
-    bind(animationToggle, 'change', (e) => {
-
-        const enabled = e.target.checked;
-
-        window.api.setSetting('animationsEnabled', enabled);
-
-        applyAnimationSetting(enabled);
-
+    bind(animationSelect, 'change', (e) => {
+        const mode = e.target.value;
+        window.api.setSetting('animationMode', mode);
+        // Also update legacy setting for backward compatibility if needed, or just rely on mode
+        window.api.setSetting('animationsEnabled', mode !== 'off'); 
+        applyAnimationSetting(mode);
     });
 
     
@@ -1560,7 +1584,7 @@ document.addEventListener('DOMContentLoaded', () => {
     qualitySelect = $('#audio-quality-select');
     themeSelect = $('#theme-select');
     visualizerToggle = $('#toggle-visualizer');
-    animationToggle = $('#toggle-background-animation');
+    animationSelect = $('#animation-select');
     backgroundAnimationEl = $('.background-animation');
     emojiSelect = $('#emoji-select');
     customEmojiContainer = $('#custom-emoji-container');
@@ -1580,6 +1604,7 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmDeleteBtn = $('#confirm-delete-btn');
     confirmDeleteCancelBtn = $('#confirm-delete-cancel-btn');
     autoLoadLastFolderToggle = $('#toggle-auto-load-last-folder');
+    toggleMiniMode = $('#toggle-mini-mode');
 
     // Initial setup
     setupAudioEvents();

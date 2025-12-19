@@ -23,11 +23,29 @@
     --bg-main: #000000;
     --bg-card: #121212;
     --bg-card-light: #1e1e1e;
-    --accent: #10b981;
-    --accent-soft: rgba(16, 185, 129, 0.15);
+    --accent: #8b5cf6; /* Midnight Purple */
+    --accent-soft: rgba(139, 92, 246, 0.15);
     --text-main: #ffffff;
     --text-muted: #b0b0b0;
     --border-soft: #333333;
+}
+
+:root[data-theme="dinolove"] {
+    --bg-main: #000000;
+    --bg-card: rgba(8, 20, 12, 0.9);
+    --bg-card-light: rgba(10, 35, 20, 0.5);
+    --accent: #22c55e;
+    --accent-soft: rgba(34, 197, 94, 0.15);
+    --text-main: #f0fdf4;
+    --text-muted: #4ade80;
+    --border-soft: rgba(34, 197, 94, 0.2);
+    --shadow-soft: 0 20px 50px rgba(0, 15, 5, 0.8);
+}
+
+/* Dinolove Background Gradient Override - Much Darker */
+:root[data-theme="dinolove"] body {
+    background: linear-gradient(160deg, #061f10 0%, #000000 50%);
+    background-attachment: fixed;
 }
   
 :root[data-theme="light"] {
@@ -117,9 +135,11 @@ input, textarea { user-select: text; }
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: -1;
+    pointer-events: none;
 }
 
-.background-animation::before {
+/* --- Animation 1: Flow (Standard) --- */
+.background-animation.type-flow::before {
     content: '';
     position: absolute;
     width: 100%; height: 100%;
@@ -131,6 +151,33 @@ input, textarea { user-select: text; }
     background-size: 200% 200%;
     animation: background-flow 40s ease-in-out infinite;
     will-change: transform;
+    opacity: 0.6;
+}
+
+/* --- Animation 2: Nebula (New) --- */
+.background-animation.type-nebula::before {
+    content: '';
+    position: absolute;
+    width: 200%; height: 200%;
+    top: -50%; left: -50%;
+    background: radial-gradient(circle at center, var(--accent-soft), transparent 60%);
+    background-size: 100% 100%;
+    animation: nebula-pulse 15s ease-in-out infinite alternate;
+    opacity: 0.8;
+}
+
+/* --- Animation 3: Rainbow (New - Diagonal Seamless) --- */
+.background-animation.type-rainbow::before {
+    content: '';
+    position: absolute;
+    width: 100%; height: 100%;
+    /* 45-degree gradient with start/end color match for seamless loop */
+    background: linear-gradient(45deg, 
+        #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
+    background-size: 200% 200%;
+    animation: rainbow-flow 15s linear infinite;
+    opacity: 0.2;
+    mix-blend-mode: screen;
 }
 
 @keyframes background-flow {
@@ -139,6 +186,26 @@ input, textarea { user-select: text; }
     50%  { background-position: 50% 100%; }
     75%  { background-position: 25% 75%; }
     100% { background-position: 0% 0%; }
+}
+
+@keyframes nebula-pulse {
+    0% { transform: scale(1) rotate(0deg); opacity: 0.4; }
+    100% { transform: scale(1.2) rotate(10deg); opacity: 0.8; }
+}
+
+@keyframes rainbow-flow {
+    0% { background-position: 0% 100%; }
+    100% { background-position: 100% 0%; }
+}
+
+/* DINOLOVE Specific Fixes */
+:root[data-theme="dinolove"] .lang-btn.active {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px var(--accent);
+}
+:root[data-theme="dinolove"] .lang-btn:not(.active) {
+    color: var(--text-muted);
+    opacity: 0.6;
 }
 
 /* =========================================
@@ -168,7 +235,29 @@ input, textarea { user-select: text; }
 .app-title-text h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px; }
 .app-title-text p { font-size: 0.75rem; color: var(--text-muted); }
 
-.header-right { display: flex; align-items: center; gap: 16px; }
+.header-right { 
+    display: flex; 
+    align-items: center; 
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+    margin-right: 15px;
+    border-right: 1px solid var(--border-soft);
+}
+
+.header-item:last-child {
+    border-right: none;
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.header-item .control-btn {
+    width: 38px;
+    height: 38px;
+}
 
 .main-grid {
   flex: 1;
@@ -256,7 +345,9 @@ input, textarea { user-select: text; }
   width: 44px; height: 44px; border-radius: 50%; background: transparent;
   border: 1px solid var(--border-soft); color: var(--text-muted);
   display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-fast);
+  flex-shrink: 0; /* Prevent squishing */
 }
+.control-btn svg { overflow: visible; } /* Prevent cutting off */
 .control-btn:hover { border-color: var(--accent); color: var(--text-main); transform: scale(1.05); }
 .control-btn:active { transform: scale(0.95); }
 .control-btn.mode-btn--active { color: var(--accent); border-color: var(--accent); animation: pulse 0.4s; }
@@ -368,16 +459,19 @@ input[type=range].volume-slider::-moz-range-thumb {
    HEADER CONTROLS
    ========================================= */
 
+.mini-mode-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-right: 10px;
+    letter-spacing: 1px;
+}
+
 .lang-switch { display: flex; align-items: center; gap: 8px; }
 .lang-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; padding: 4px; }
 .lang-btn.active { color: var(--accent); }
 
 .theme-panel { display: flex; align-items: center; background: var(--bg-card-light); padding: 4px; border-radius: 20px; }
-.theme-btn { width: 18px; height: 18px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
-.theme-btn[data-theme="blue"] { background: #38bdf8; }
-.theme-btn[data-theme="dark"] { background: #121212; border-color: #555; }
-.theme-btn[data-theme="light"] { background: #f3f4f6; border-color: #ccc; }
-.theme-btn.active { border-color: var(--text-main); transform: scale(1.15); }
 
 
 /* =========================================
@@ -821,11 +915,97 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 :root[data-theme="light"] .setting-label p {
-    color: #4b5563; /* Zwingt den Beschreibungstext des Einstellungselements zu ged�mpftem dunklem Text */
+    color: #4b5563; /* Zwingt den Beschreibungstext des Einstellungselements zu gedmpftem dunklem Text */
 }
 
 :root[data-theme="light"] .settings-select {
     color: #111827;
-    background-color: #e5e7eb; /* Macht den Hintergrund des Auswahlfeldes etwas dunkler f�r besseren Kontrast */
+    background-color: #e5e7eb; /* Macht den Hintergrund des Auswahlfeldes etwas dunkler fr besseren Kontrast */
 }
 
+/* =========================================
+   MINI PLAYER MODE (< 450px width)
+   ========================================= */
+
+@media (max-width: 450px) {
+  /* Hide unnecessary elements */
+  .extras-column { display: none !important; }
+  .app-header .app-title-text, .app-header .logo-icon { display: none; }
+  .app-footer { display: none; }
+  
+  /* Compact Header */
+  .app-header { 
+      justify-content: center; 
+      height: 32px; 
+      padding: 0 4px;
+      -webkit-app-region: drag; /* Make whole header draggable */
+  }
+  .header-right { 
+      gap: 0; 
+      justify-content: center; 
+      width: 100%;
+  }
+  
+  /* Hide everything except the first item (Mini Player Toggle) */
+  .header-right .header-item:not(:first-child) { display: none !important; }
+  
+  /* Remove borders and margins from the remaining item to center it perfectly */
+  .header-right .header-item {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+      justify-content: center;
+      width: auto;
+  }
+  
+  .mini-mode-switch-container {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+  }
+  
+  /* Optimize Player Layout */
+  .main-grid { 
+      padding: 10px; 
+      grid-template-columns: 1fr;
+      height: calc(100vh - 32px); /* Adjust for header */
+      overflow: hidden;
+  }
+  
+  .player-column { 
+      padding: 0; 
+      justify-content: center;
+      gap: 10px;
+  }
+  
+  .glass-panel {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+  }
+  
+  /* Resize Cover Art */
+  .cover-art-wrapper { 
+      width: 140px; height: 140px; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+  .music-emoji { font-size: 60px; }
+  
+  /* Compact Text */
+  .track-info-area { margin-top: 10px; }
+  .track-title-large { font-size: 1.1rem; margin-bottom: 2px; }
+  .track-artist-large { font-size: 0.8rem; }
+  
+  /* Compact Controls */
+  .visualizer-container { height: 30px; margin: 10px 0; }
+  .controls-area { gap: 15px; }
+  .control-main { width: 50px; height: 50px; }
+  .control-main svg { width: 24px; height: 24px; }
+  .control-btn { width: 36px; height: 36px; }
+  
+  .volume-control-area { margin-top: 10px; }
+  
+  /* Allow clicking buttons in draggable header */
+  .app-header button { -webkit-app-region: no-drag; }
+}

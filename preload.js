@@ -26,4 +26,5 @@ contextBridge.exposeInMainWorld('api', {
     getSettings: () => ipcRenderer.invoke('get-settings'),
     setSetting: (key, value) => ipcRenderer.invoke('set-setting', key, value),
     selectFolder: () => ipcRenderer.invoke('select-folder'),
+    setWindowSize: (width, height) => ipcRenderer.send('set-window-size', { width, height }),
 });

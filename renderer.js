@@ -183,6 +183,7 @@ function updateUIForCurrentTrack() {
     if (currentIndex === -1 || !playlist[currentIndex]) {
         if (trackTitleEl) trackTitleEl.textContent = tr('nothingPlaying');
         if (trackArtistEl) trackArtistEl.textContent = '...';
+        if (musicEmojiEl) musicEmojiEl.textContent = '🎵'; 
         updateActiveTrackInPlaylist();
         updateTrackTitleScroll();
         return;
@@ -190,6 +191,10 @@ function updateUIForCurrentTrack() {
     const track = playlist[currentIndex];
     if (trackTitleEl) trackTitleEl.textContent = track.title;
     if (trackArtistEl) trackArtistEl.textContent = track.artist || tr('unknownArtist');
+    
+    // Nur Emoji-Funktion nutzen
+    updateEmoji(settings.coverEmoji || 'note', settings.customCoverEmoji);
+
     updateActiveTrackInPlaylist();
     updateTrackTitleScroll();
 }
@@ -420,12 +425,17 @@ function setupAudioEvents() {
     audio.addEventListener('ended', () => {
         stopVisualizer(); if (loopMode === 'one') { audio.currentTime = 0; audio.play(); } else playNext();
     });
-    audio.addEventListener('volumechange', () => {
-        currentVolume = audio.volume;
-        if (volumeSlider) volumeSlider.value = currentVolume;
-        if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
-        window.api.setSetting('volume', currentVolume);
-    });
+        audio.addEventListener('volumechange', () => {
+            currentVolume = audio.volume;
+            if (volumeSlider) volumeSlider.value = currentVolume;
+            if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
+            
+            // Debounce volume saving to disk
+            clearTimeout(window.volumeSaveTimeout);
+            window.volumeSaveTimeout = setTimeout(() => {
+                window.api.setSetting('volume', currentVolume);
+            }, 500);
+        });
 }
 
 async function loadSettings() {
@@ -461,6 +471,11 @@ async function loadSettings() {
 
     const et = settings.coverEmoji || 'note';
     const ce = settings.customCoverEmoji || '🎵';
+    
+    if (emojiSelect) emojiSelect.value = et;
+    if (customEmojiInput) customEmojiInput.value = ce;
+    if (customEmojiContainer) customEmojiContainer.style.display = et === 'custom' ? 'flex' : 'none';
+    
     updateEmoji(et, ce);
     
     if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) {

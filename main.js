@@ -172,16 +172,22 @@ async function processTracksInBatches(files, folderPath) {
         const batchPromises = batch.map(async (file) => {
             const filePath = path.join(folderPath, file);
             try {
-                const metadata = await mm.parseFile(filePath, { skipCovers: true, duration: true });
                 const stat = await fs.stat(filePath);
+                if (!stat.isFile()) return null;
+
+                const metadata = await mm.parseFile(filePath, { skipCovers: true, duration: true }).catch(() => null);
+                
                 return {
                     path: filePath,
-                    title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
-                    artist: metadata.common.artist || null,
-                    duration: metadata.format.duration || 0,
+                    title: (metadata && metadata.common && metadata.common.title) || path.basename(filePath, path.extname(filePath)),
+                    artist: (metadata && metadata.common && metadata.common.artist) || null,
+                    duration: (metadata && metadata.format && metadata.format.duration) || 0,
                     mtime: stat.mtimeMs || 0,
                 };
-            } catch (error) { return null; }
+            } catch (error) { 
+                console.error(`Error processing file ${file}:`, error);
+                return null; 
+            }
         });
         const batchResults = await Promise.all(batchPromises);
         tracks.push(...batchResults.filter(Boolean));

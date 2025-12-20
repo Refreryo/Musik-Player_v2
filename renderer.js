@@ -406,15 +406,17 @@ function stopVisualizer() {
 }
 
 function drawVisualizer() {
-    if (!visualizerRunning || !isPlaying || !visualizerEnabled) { visualizerRunning = false; return; }
+    if (!visualizerRunning || !isPlaying || !visualizerEnabled || !analyser || !visualizerDataArray) { 
+        visualizerRunning = false; 
+        return; 
+    }
     requestAnimationFrame(drawVisualizer);
-    if (!visualizerDataArray) return;
     
     const ctx = visualizerCanvas.getContext('2d');
     const { width, height } = visualizerCanvas;
     ctx.clearRect(0, 0, width, height);
     
-    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#38bdf8';
     analyser.getByteFrequencyData(visualizerDataArray);
 
     if (currentVisualizerStyle === 'bars') {
@@ -934,12 +936,17 @@ function setupEventListeners() {
         }
     });
     
+    let resizeTimeout;
     new ResizeObserver(() => {
-        if (visualizerCanvas && visualizerCanvas.width !== visualizerContainer.clientWidth) {
+        if (visualizerCanvas && visualizerContainer && visualizerCanvas.width !== visualizerContainer.clientWidth) {
             visualizerCanvas.width = visualizerContainer.clientWidth;
         }
     }).observe(visualizerContainer);
-    window.addEventListener('resize', updateTrackTitleScroll);
+    
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updateTrackTitleScroll, 100);
+    });
 }
 
 function showNotification(msg) {

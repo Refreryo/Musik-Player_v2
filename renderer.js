@@ -29,7 +29,7 @@ let visualizerDataArray;
 let visualizerRunning = false;
 
 // DOM Elements
-let $, trackTitleEl, trackArtistEl, musicEmojiEl, currentTimeEl, durationEl, progressBar, progressFill, playBtn, playIcon, pauseIcon, prevBtn, nextBtn, loopBtn, shuffleBtn, volumeSlider, volumeIcon, playlistEl, playlistInfoBar, loadFolderBtn, openLibraryBtn, libraryOverlay, libraryCloseBtn, refreshFolderBtn, searchInput, sortSelect, ytUrlInput, ytNameInput, downloadBtn, downloaderOverlay, downloaderCloseBtn, downloadStatusEl, downloadProgressFill, visualizerCanvas, visualizerContainer, langButtons, settingsBtn, settingsOverlay, settingsCloseBtn, downloadFolderInput, changeFolderBtn, qualitySelect, themeSelect, visualizerToggle, visualizerStyleSelect, visualizerSensitivity, sleepTimerSelect, animationSelect, backgroundAnimationEl, emojiSelect, customEmojiContainer, customEmojiInput, toggleDeleteSongs, toggleDownloaderBtn, contextMenu, contextMenuEditTitle, editTitleOverlay, editTitleInput, originalTitlePreview, newTitlePreview, editTitleCancelBtn, editTitleSaveBtn, confirmDeleteOverlay, confirmDeleteBtn, confirmDeleteCancelBtn, autoLoadLastFolderToggle, toggleMiniMode, notificationBar, notificationMessage, notificationTimeout;
+let $, trackTitleEl, trackArtistEl, musicEmojiEl, currentTimeEl, durationEl, progressBar, progressFill, playBtn, playIcon, pauseIcon, prevBtn, nextBtn, loopBtn, shuffleBtn, volumeSlider, volumeIcon, playlistEl, playlistInfoBar, loadFolderBtn, openLibraryBtn, libraryOverlay, libraryCloseBtn, refreshFolderBtn, searchInput, sortSelect, ytUrlInput, ytNameInput, downloadBtn, downloaderOverlay, downloaderCloseBtn, downloadStatusEl, downloadProgressFill, visualizerCanvas, visualizerContainer, langButtons, settingsBtn, settingsOverlay, settingsCloseBtn, downloadFolderInput, changeFolderBtn, qualitySelect, themeSelect, visualizerToggle, visualizerStyleSelect, visualizerSensitivity, sleepTimerSelect, animationSelect, backgroundAnimationEl, emojiSelect, customEmojiContainer, customEmojiInput, toggleDeleteSongs, toggleDownloaderBtn, contextMenu, contextMenuEditTitle, editTitleOverlay, editTitleInput, originalTitlePreview, newTitlePreview, editTitleCancelBtn, editTitleSaveBtn, confirmDeleteOverlay, confirmDeleteBtn, confirmDeleteCancelBtn, autoLoadLastFolderToggle, toggleMiniMode, notificationBar, notificationMessage, notificationTimeout, accentColorPicker, toggleFocusModeBtn, dropZone, toggleEnableFocus, toggleEnableDrag, toggleUseCustomColor;
 
 let trackToDeletePath = null;
 let renderPlaylistRequestId = null;
@@ -75,6 +75,10 @@ const translations = {
         sleepTimerDesc: 'Stoppt die Musik automatisch nach der gewählten Zeit.',
         timerOff: 'Aus',
         nowPlaying: 'Jetzt läuft',
+        customColor: 'Eigene Akzentfarbe',
+        customColorDesc: 'Wähle deine Lieblingsfarbe für das Interface.',
+        focusMode: 'Fokus-Modus umschalten',
+        dropFiles: 'Musik oder Ordner hierher ziehen',
         sortNewest: 'Zuletzt geändert', sortNameAZ: 'Name A-Z', sortNameZA: 'Name Z-A',
         sectionAppearance: 'Erscheinungsbild',
         themeDescription: 'Passe das Aussehen und die Farbgebung der App an.',
@@ -95,6 +99,13 @@ const translations = {
         audioQualityDescription: 'Wähle die Audioqualität für neue YouTube-Downloads.',
         autoLoadLastFolder: 'Zuletzt benutzten Ordner automatisch laden',
         autoLoadLastFolderDescription: 'Wenn aktiviert, wird der zuletzt benutzte Ordner beim Start der App automatisch geladen.',
+        sectionExtras: 'Extras & Spezialfunktionen',
+        enableFocusOption: 'Fokus-Modus Button anzeigen',
+        enableFocusOptionDesc: 'Blendet den kleinen Button am Visualizer ein oder aus.',
+        enableDragOption: 'Drag & Drop aktivieren',
+        enableDragOptionDesc: 'Ermöglicht das Hinzufügen von Musik durch Reinziehen in das Fenster.',
+        useCustomColorOption: 'Eigene Akzentfarbe nutzen',
+        useCustomColorOptionDesc: 'Wende deine gewählte Farbe an oder nutze die Theme-Standards.',
         animOff: 'Aus', animFlow: 'Flow', animNebula: 'Nebula', animRainbow: 'Regenbogen',
         editTitle: 'Titel bearbeiten', editTitleDesc: 'Ändern Sie den Namen, der in der Playlist angezeigt wird.',
         currentTitle: 'Aktuell gespeichert', previewTitle: 'Vorschau (Neu)',
@@ -144,6 +155,10 @@ const translations = {
         sleepTimerDesc: 'Automatically stops the music after the selected time.',
         timerOff: 'Off',
         nowPlaying: 'Now Playing',
+        customColor: 'Custom Accent Color',
+        customColorDesc: 'Choose your favorite color for the interface.',
+        focusMode: 'Toggle Focus Mode',
+        dropFiles: 'Drop music or folders here',
         sortNewest: 'Recently Modified', sortNameAZ: 'Name A-Z', sortNameZA: 'Name Z-A',
         sectionAppearance: 'Appearance',
         themeDescription: 'Customize the look and feel of the application.',
@@ -164,6 +179,13 @@ const translations = {
         audioQualityDescription: 'Choose the audio quality for new YouTube downloads.',
         autoLoadLastFolder: 'Automatically load last used folder',
         autoLoadLastFolderDescription: 'If enabled, the last used folder will be loaded automatically when the app starts.',
+        sectionExtras: 'Extras & Special Features',
+        enableFocusOption: 'Show Focus Mode Button',
+        enableFocusOptionDesc: 'Toggle the visibility of the focus mode button on the visualizer.',
+        enableDragOption: 'Enable Drag & Drop',
+        enableDragOptionDesc: 'Allows adding music by dragging files into the window.',
+        useCustomColorOption: 'Use Custom Accent Color',
+        useCustomColorOptionDesc: 'Apply your selected color or use theme defaults.',
         animOff: 'Off', animFlow: 'Flow', animNebula: 'Nebula', animRainbow: 'Rainbow',
         editTitle: 'Edit Title', editTitleDesc: 'Change the name shown in the playlist.',
         currentTitle: 'Currently Saved', previewTitle: 'Preview (New)',
@@ -682,6 +704,13 @@ async function loadSettings() {
     }
     if (autoLoadLastFolderToggle) autoLoadLastFolderToggle.checked = settings.autoLoadLastFolder !== false;
 
+    if (toggleEnableFocus) {
+        toggleEnableFocus.checked = settings.enableFocusMode !== false;
+        if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = (settings.enableFocusMode !== false) ? 'flex' : 'none';
+    }
+    if (toggleEnableDrag) toggleEnableDrag.checked = settings.enableDragAndDrop !== false;
+    if (toggleUseCustomColor) toggleUseCustomColor.checked = settings.useCustomColor || false;
+
     const et = settings.coverEmoji || 'note';
     const ce = settings.customCoverEmoji || '🎵';
     
@@ -875,6 +904,56 @@ function setupEventListeners() {
         document.documentElement.setAttribute('data-theme', th);
         window.api.setSetting('theme', th);
     });
+
+    bind(accentColorPicker, 'input', (e) => {
+        const color = e.target.value;
+        document.documentElement.style.setProperty('--accent', color);
+        window.api.setSetting('customAccentColor', color);
+    });
+
+    bind(toggleFocusModeBtn, 'click', () => {
+        const isActive = document.body.classList.toggle('focus-active');
+        if (isActive) {
+            showNotification("Fokus-Modus aktiv (Klicke oben rechts zum Verlassen)");
+        }
+        // Sofortige Anpassung der Canvas-Größe
+        if (visualizerCanvas && visualizerContainer) {
+            visualizerCanvas.width = visualizerContainer.clientWidth;
+            visualizerCanvas.height = visualizerContainer.clientHeight;
+        }
+    });
+
+    // Drag & Drop Logic
+    window.addEventListener('dragover', (e) => {
+        if (settings.enableDragAndDrop === false) return;
+        e.preventDefault();
+        if (dropZone) dropZone.classList.add('active');
+    });
+
+    window.addEventListener('dragleave', (e) => {
+        if (settings.enableDragAndDrop === false) return;
+        if (e.relatedTarget === null) {
+            if (dropZone) dropZone.classList.remove('active');
+        }
+    });
+
+    window.addEventListener('drop', async (e) => {
+        if (settings.enableDragAndDrop === false) return;
+        e.preventDefault();
+        if (dropZone) dropZone.classList.remove('active');
+        
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            const firstPath = files[0].path;
+            const r = await window.api.refreshMusicFolder(firstPath);
+            if (r && r.tracks && r.tracks.length > 0) {
+                basePlaylist = r.tracks; playlist = [...basePlaylist]; currentIndex = -1;
+                renderPlaylist(); updateUIForCurrentTrack(); currentFolderPath = r.folderPath;
+                window.api.setSetting('currentFolderPath', currentFolderPath);
+                showNotification(tr('loadFolder'));
+            }
+        }
+    });
     
     bind(sortSelect, 'change', (e) => {
         sortMode = e.target.value;
@@ -914,7 +993,10 @@ function setupEventListeners() {
 
     bind(sleepTimerSelect, 'change', (e) => {
         const mins = parseInt(e.target.value);
-        if (sleepTimerId) clearTimeout(sleepTimerId);
+        if (sleepTimerId) {
+            clearTimeout(sleepTimerId);
+            sleepTimerId = null;
+        }
         if (mins > 0) {
             sleepTimerId = setTimeout(() => {
                 audio.pause();
@@ -922,6 +1004,7 @@ function setupEventListeners() {
                 updatePlayPauseUI();
                 showNotification("Sleep Timer: Musik gestoppt.");
                 sleepTimerSelect.value = "0";
+                sleepTimerId = null;
             }, mins * 60000);
             showNotification(`Sleep Timer aktiviert: ${mins} Minuten`);
         }
@@ -929,11 +1012,30 @@ function setupEventListeners() {
     
     bind(animationSelect, 'change', (e) => {
         const m = e.target.value;
-        window.api.setSetting('animationMode', m);
+        window.api.setSetting('animationMode', m).catch(console.error);
         applyAnimationSetting(m);
     });
     
     bind(autoLoadLastFolderToggle, 'change', (e) => window.api.setSetting('autoLoadLastFolder', e.target.checked));
+
+    bind(toggleEnableFocus, 'change', (e) => {
+        window.api.setSetting('enableFocusMode', e.target.checked);
+        if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = e.target.checked ? 'flex' : 'none';
+    });
+
+    bind(toggleEnableDrag, 'change', (e) => {
+        window.api.setSetting('enableDragAndDrop', e.target.checked);
+    });
+
+    bind(toggleUseCustomColor, 'change', (e) => {
+        window.api.setSetting('useCustomColor', e.target.checked);
+        if (e.target.checked) {
+            const color = accentColorPicker ? accentColorPicker.value : '#38bdf8';
+            document.documentElement.style.setProperty('--accent', color);
+        } else {
+            document.documentElement.style.removeProperty('--accent');
+        }
+    });
     
     bind(emojiSelect, 'change', (e) => {
         const v = e.target.value;
@@ -1071,6 +1173,12 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmDeleteOverlay = $('#confirm-delete-overlay'); confirmDeleteBtn = $('#confirm-delete-btn'); confirmDeleteCancelBtn = $('#confirm-delete-cancel-btn');
     autoLoadLastFolderToggle = $('#toggle-auto-load-last-folder'); toggleMiniMode = $('#toggle-mini-mode');
     notificationBar = $('#notification-bar'); notificationMessage = $('#notification-message');
+    accentColorPicker = $('#accent-color-picker');
+    toggleFocusModeBtn = $('#toggle-focus-mode');
+    dropZone = $('#drop-zone');
+    toggleEnableFocus = $('#toggle-enable-focus');
+    toggleEnableDrag = $('#toggle-enable-drag');
+    toggleUseCustomColor = $('#toggle-use-custom-color');
 
     // Close Modals on Overlay Click
     const overlays = [settingsOverlay, libraryOverlay, downloaderOverlay, editTitleOverlay, confirmDeleteOverlay];
@@ -1081,9 +1189,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setupVisualizer();
 
     loadSettings().then(() => {
-        if (settings.theme) document.documentElement.setAttribute('data-theme', settings.theme);
-        applyTranslations();
-        audio.volume = currentVolume;
+                if (settings.theme) document.documentElement.setAttribute('data-theme', settings.theme);
+                if (settings.useCustomColor && settings.customAccentColor) {
+                    document.documentElement.style.setProperty('--accent', settings.customAccentColor);
+                    if (accentColorPicker) accentColorPicker.value = settings.customAccentColor;
+                }
+                applyTranslations();        audio.volume = currentVolume;
         if (volumeSlider) volumeSlider.value = currentVolume;
         if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
     });

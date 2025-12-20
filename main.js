@@ -66,6 +66,9 @@ async function main() {
             coverEmoji: 'note',
             customCoverEmoji: '🎵',
             autoLoadLastFolder: true,
+            enableFocusMode: true,
+            enableDragAndDrop: true,
+            useCustomColor: false,
             language: 'de',
             volume: 0.2,
             sortMode: 'name'
@@ -116,9 +119,14 @@ function registerIpcHandlers(store) {
 
     ipcMain.handle('refresh-music-folder', async (event, folderPath) => {
         try {
-            const files = await fs.readdir(folderPath);
-            const tracks = await processTracksInBatches(files, folderPath);
-            return { tracks, folderPath };
+            let targetPath = folderPath;
+            const stat = await fs.stat(folderPath);
+            if (stat.isFile()) {
+                targetPath = path.dirname(folderPath);
+            }
+            const files = await fs.readdir(targetPath);
+            const tracks = await processTracksInBatches(files, targetPath);
+            return { tracks, folderPath: targetPath };
         } catch (error) {
             return { tracks: null, folderPath: null, error: error.message };
         }

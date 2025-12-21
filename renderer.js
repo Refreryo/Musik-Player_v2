@@ -442,7 +442,7 @@ async function loadSettings() {
     if (emojiSelect) emojiSelect.value = et; if (customEmojiInput) customEmojiInput.value = ce;
     if (customEmojiContainer) customEmojiContainer.style.display = et === 'custom' ? 'flex' : 'none';
     updateEmoji(et, ce);
-    if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) { currentFolderPath = settings.currentFolderPath; window.api.refreshMusicFolder(currentFolderPath).then(result => { if (result && result.tracks) { basePlaylist = result.tracks; sortPlaylist(sortMode); updateUIForCurrentTrack(); } }); }
+    if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) { currentFolderPath = settings.currentFolderPath; try { const result = await window.api.refreshMusicFolder(currentFolderPath); if (result && result.tracks) { basePlaylist = result.tracks; sortPlaylist(sortMode); updateUIForCurrentTrack(); } } catch (e) { console.error(e); } }
     if (shuffleBtn) shuffleBtn.classList.toggle('mode-btn--active', shuffleOn);
     if (loopBtn) { loopBtn.classList.toggle('mode-btn--active', loopMode !== 'off'); updateLoopIcon(); }
     if (langButtons) langButtons.forEach(b => b.classList.toggle('active', b.dataset.lang === currentLanguage));
@@ -478,7 +478,7 @@ function setupEventListeners() {
     bind(openLibraryBtn, 'click', () => { libraryOverlay.classList.add('visible'); });
     bind(libraryCloseBtn, 'click', () => { libraryOverlay.classList.remove('visible'); });
     bind(loadFolderBtn, 'click', async () => { const r = await window.api.selectMusicFolder(); if (r && r.tracks) { basePlaylist = r.tracks; playlist = [...basePlaylist]; currentIndex = -1; renderPlaylist(); updateUIForCurrentTrack(); currentFolderPath = r.folderPath; window.api.setSetting('currentFolderPath', currentFolderPath); libraryOverlay.classList.remove('visible'); } });
-    bind(refreshFolderBtn, 'click', async () => { if (!currentFolderPath) return; const r = await window.api.refreshMusicFolder(currentFolderPath); if (r && r.tracks) { basePlaylist = r.tracks; sortPlaylist(sortMode); updateUIForCurrentTrack(); settingsOverlay.classList.remove('visible'); } });
+    bind(refreshFolderBtn, 'click', async () => { let path = currentFolderPath || settings.currentFolderPath; if (!path) return; const r = await window.api.refreshMusicFolder(path); if (r && r.tracks) { currentFolderPath = r.folderPath; window.api.setSetting('currentFolderPath', currentFolderPath); basePlaylist = r.tracks; sortPlaylist(sortMode); updateUIForCurrentTrack(); settingsOverlay.classList.remove('visible'); } });
     let st; bind(searchInput, 'input', (e) => { clearTimeout(st); st = setTimeout(() => { filterPlaylist(e.target.value); }, 250); });
     window.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -513,7 +513,7 @@ function setupEventListeners() {
     bind(visualizerSensitivity, 'input', (e) => { visSensitivity = parseFloat(e.target.value); updateAnalyserSettings(); window.api.setSetting('visSensitivity', visSensitivity); });
     bind(sleepTimerSelect, 'change', (e) => { const mins = parseInt(e.target.value); if (sleepTimerId) { clearTimeout(sleepTimerId); sleepTimerId = null; } if (mins > 0) { sleepTimerId = setTimeout(() => { audio.pause(); isPlaying = false; updatePlayPauseUI(); showNotification("Sleep Timer: Musik gestoppt."); sleepTimerSelect.value = "0"; sleepTimerId = null; }, mins * 60000); showNotification(`Sleep Timer aktiviert: ${mins} Minuten`); } });
     bind(animationSelect, 'change', (e) => { const m = e.target.value; window.api.setSetting('animationMode', m).catch(console.error); applyAnimationSetting(m); });
-    bind(autoLoadLastFolderToggle, 'change', (e) => window.api.setSetting('autoLoadLastFolder', e.target.checked));
+    bind(autoLoadLastFolderToggle, 'change', (e) => { window.api.setSetting('autoLoadLastFolder', e.target.checked); if (e.target.checked && currentFolderPath) window.api.setSetting('currentFolderPath', currentFolderPath); });
     bind(toggleEnableFocus, 'change', (e) => { window.api.setSetting('enableFocusMode', e.target.checked); if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = e.target.checked ? 'flex' : 'none'; });
     bind(toggleEnableDrag, 'change', (e) => { window.api.setSetting('enableDragAndDrop', e.target.checked); });
     bind(toggleUseCustomColor, 'change', (e) => {

@@ -450,7 +450,6 @@ async function loadSettings() {
     if (visualizerSensitivity) { visSensitivity = settings.visSensitivity || 1.5; visualizerSensitivity.value = visSensitivity; }
     if (toggleDeleteSongs) { toggleDeleteSongs.checked = settings.deleteSongsEnabled || false; deleteSongsEnabled = settings.deleteSongsEnabled || false; }
     if (autoLoadLastFolderToggle) autoLoadLastFolderToggle.checked = settings.autoLoadLastFolder !== false;
-    if (toggleEnableFocus) { toggleEnableFocus.checked = settings.enableFocusMode !== false; if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = (settings.enableFocusMode !== false) ? 'flex' : 'none'; }
     if (toggleEnableDrag) toggleEnableDrag.checked = settings.enableDragAndDrop !== false;
     if (toggleUseCustomColor) { toggleUseCustomColor.checked = settings.useCustomColor || false; if (accentColorContainer) accentColorContainer.classList.toggle('hidden', !toggleUseCustomColor.checked); }
     const et = settings.coverEmoji || 'note', ce = settings.customCoverEmoji || '🎵';
@@ -551,7 +550,6 @@ function setupEventListeners() {
     if (langButtons) langButtons.forEach(btn => { bind(btn, 'click', () => { currentLanguage = btn.dataset.lang; langButtons.forEach(b => b.classList.remove('active')); btn.classList.add('active'); applyTranslations(); window.api.setSetting('language', currentLanguage); }); });
     bind(themeSelect, 'change', (e) => { const th = e.target.value; document.documentElement.setAttribute('data-theme', th); window.api.setSetting('theme', th); });
     bind(accentColorPicker, 'input', (e) => { const color = e.target.value; document.documentElement.style.setProperty('--accent', color); window.api.setSetting('customAccentColor', color); });
-    bind(toggleFocusModeBtn, 'click', () => { const isActive = document.body.classList.toggle('focus-active'); if (isActive) showNotification("Fokus-Modus aktiv (Klicke oben rechts zum Verlassen)"); if (visualizerCanvas && visualizerContainer) { visualizerCanvas.width = visualizerContainer.clientWidth; visualizerCanvas.height = visualizerContainer.clientHeight; } });
     window.addEventListener('dragover', (e) => { if (settings.enableDragAndDrop === false) return; e.preventDefault(); if (dropZone) dropZone.classList.add('active'); });
     window.addEventListener('dragleave', (e) => { if (settings.enableDragAndDrop === false) return; if (e.relatedTarget === null) { if (dropZone) dropZone.classList.remove('active'); } });
     window.addEventListener('drop', async (e) => {
@@ -685,9 +683,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupAudioEvents(); setupEventListeners(); setupVisualizer();
 
+    const hideSplash = () => {
+        const splash = $('#splash-screen');
+        if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.body.classList.add('ready');
+            }, 1000);
+        } else {
+            document.body.classList.add('ready');
+        }
+    };
+
     loadSettings().then(() => {
-        if (settings.theme) document.documentElement.setAttribute('data-theme', settings.theme);
-        if (settings.useCustomColor && settings.customAccentColor) { document.documentElement.style.setProperty('--accent', settings.customAccentColor); if (accentColorPicker) accentColorPicker.value = settings.customAccentColor; }
-        applyTranslations(); audio.volume = currentVolume; if (volumeSlider) volumeSlider.value = currentVolume; if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
+        try {
+            if (settings.theme) document.documentElement.setAttribute('data-theme', settings.theme);
+            if (settings.useCustomColor && settings.customAccentColor) { 
+                document.documentElement.style.setProperty('--accent', settings.customAccentColor); 
+                if (accentColorPicker) accentColorPicker.value = settings.customAccentColor; 
+            }
+            applyTranslations(); 
+            audio.volume = currentVolume; 
+            if (volumeSlider) volumeSlider.value = currentVolume; 
+            if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
+        } catch (err) {
+            console.error("Error applying settings:", err);
+        }
+        
+        // Hide Splash Screen after Pulse
+        setTimeout(hideSplash, 2500);
+    }).catch(e => {
+        console.error("Settings load failed:", e);
+        hideSplash();
     });
 });

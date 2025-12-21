@@ -130,9 +130,13 @@ body {
 input, textarea { user-select: text; }
 
 /* Scrollbars */
-::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+::-webkit-scrollbar-thumb { 
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px;
+    transition: background 0.3s;
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* =========================================
@@ -254,8 +258,106 @@ input, textarea { user-select: text; }
 }
 
 /* =========================================
-   LAYOUT
+   MODERN INTRO (NovaWave 2.4.6)
    ========================================= */
+
+.splash-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #05070a;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    animation: splash-zoom-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* =========================================
+   NOVA PULSE INTRO (Clean & Premium)
+   ========================================= */
+
+.splash-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #080a0f;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pulse-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: nova-pulse 2s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+@keyframes nova-pulse {
+    0% { width: 0; height: 0; opacity: 1; }
+    100% { width: 600px; height: 600px; opacity: 0; }
+}
+
+.intro-content {
+    text-align: center;
+    opacity: 0;
+    filter: blur(10px);
+    animation: intro-reveal 1.5s ease-out 0.5s forwards;
+}
+
+.splash-logo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.splash-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.splash-slogan {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-top: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.6;
+}
+
+@keyframes intro-reveal {
+    to { opacity: 1; filter: blur(0); }
+}
+
+.splash-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none !important;
+}
 
 .app-shell {
   display: flex;
@@ -263,6 +365,15 @@ input, textarea { user-select: text; }
   height: 100vh;
   position: relative;
   z-index: 1;
+  transition: opacity 1s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+body.ready .app-shell {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .app-header {

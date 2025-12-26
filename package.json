@@ -16,7 +16,6 @@
   "build": {
     "appId": "com.snuggledino.novawave",
     "productName": "NovaWave Music Player",
-    "companyName": "SnuggleDino",
     "files": [
       "index.html",
       "main.js",

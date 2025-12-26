@@ -1,6 +1,6 @@
 {
   "name": "novawave",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "description": "Moderner Musik-Player mit YouTube-Downloader",
   "main": "main.js",
   "author": "SnuggleDino",
@@ -16,6 +16,7 @@
   "build": {
     "appId": "com.snuggledino.novawave",
     "productName": "NovaWave Music Player",
+    "companyName": "SnuggleDino",
     "files": [
       "index.html",
       "main.js",

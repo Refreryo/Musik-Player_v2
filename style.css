@@ -106,6 +106,96 @@
 }
 
 /* =========================================
+   UNIFIED FEATURES INDICATOR (Minimal Modal)
+   ========================================= */
+
+.active-features-container {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 100;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.active-features-container.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.features-badge-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px var(--accent-soft);
+    cursor: help;
+}
+
+.features-minimal-modal {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 160px;
+    background: var(--bg-card);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.active-features-container:hover .features-minimal-modal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.modal-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.modal-item {
+    display: none; /* Hidden by default */
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+
+.modal-item.active {
+    display: flex;
+}
+
+.modal-item svg {
+    color: var(--accent);
+}
+
+#modal-feat-crystal svg {
+    color: #fbbf24; /* Golden */
+}
+
+/* =========================================
    RESET & BASE
    ========================================= */
 
@@ -258,7 +348,7 @@ input, textarea { user-select: text; }
 }
 
 /* =========================================
-   MODERN INTRO (NovaWave 2.4.6)
+   MODERN INTRO (NovaWave 2.4.7)
    ========================================= */
 
 .splash-overlay {
@@ -1568,13 +1658,13 @@ body.cinema-mode .track-info-area {
     transition: opacity 0.5s ease, filter 0.5s ease;
 }
 
-body.cinema-mode:hover .app-header,
-body.cinema-mode:hover .playlist-panel,
-body.cinema-mode:hover .controls-area,
-body.cinema-mode:hover .volume-control-area,
-body.cinema-mode:hover .extras-column,
-body.cinema-mode:hover .app-footer,
-body.cinema-mode:hover .track-info-area {
+body.cinema-mode .app-header:hover,
+body.cinema-mode .playlist-panel:hover,
+body.cinema-mode .controls-area:hover,
+body.cinema-mode .volume-control-area:hover,
+body.cinema-mode .extras-column:hover,
+body.cinema-mode .app-footer:hover,
+body.cinema-mode .track-info-area:hover {
     opacity: 1;
     filter: none;
 }

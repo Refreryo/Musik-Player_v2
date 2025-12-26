@@ -431,25 +431,42 @@ function updateAudioEffects() {
     if (!audioContext) return;
     const t = audioContext.currentTime;
 
+    const bassOn = !!settings.bassBoostEnabled;
+    const crystalOn = !!settings.trebleBoostEnabled;
+    const reverbOn = !!settings.reverbEnabled;
+
     // Bass
     if (bassFilter) {
-        const bg = settings.bassBoostEnabled ? (parseFloat(settings.bassBoostValue) || 6) : 0;
+        const bg = bassOn ? (parseFloat(settings.bassBoostValue) || 6) : 0;
         bassFilter.gain.setTargetAtTime(bg, t, 0.1);
     }
 
     // Treble
     if (trebleFilter) {
-        const tg = settings.trebleBoostEnabled ? (parseFloat(settings.trebleBoostValue) || 6) : 0;
+        const tg = crystalOn ? (parseFloat(settings.trebleBoostValue) || 6) : 0;
         trebleFilter.gain.setTargetAtTime(tg, t, 0.1);
     }
 
     // Reverb
     if (reverbGain) {
-        // Linear mapping: 0-100% -> 0.0 - 1.0 gain (maybe dampen it a bit, max 1.5)
         const val = parseFloat(settings.reverbValue) || 30;
-        const rg = settings.reverbEnabled ? (val / 100) : 0;
+        const rg = reverbOn ? (val / 100) : 0;
         reverbGain.gain.setTargetAtTime(rg, t, 0.1);
     }
+
+    // Update Unified Feature Indicator
+    const mainIndicator = document.getElementById('active-features-indicator');
+    if (mainIndicator) {
+        mainIndicator.classList.toggle('active', bassOn || crystalOn || reverbOn);
+    }
+
+    // Update Modal Items
+    const mb = document.getElementById('modal-feat-bass');
+    const mc = document.getElementById('modal-feat-crystal');
+    const mr = document.getElementById('modal-feat-reverb');
+    if (mb) mb.classList.toggle('active', bassOn);
+    if (mc) mc.classList.toggle('active', crystalOn);
+    if (mr) mr.classList.toggle('active', reverbOn);
 }
 
 function startVisualizer() { if (!audioContext || visualizerRunning || !visualizerEnabled || !isPlaying) return; if (audioContext.state === 'suspended') audioContext.resume(); visualizerRunning = true; drawVisualizer(); }
@@ -536,8 +553,21 @@ function drawVisualizer() {
 function setupAudioEvents() {
     audio.addEventListener('timeupdate', () => { if (!isNaN(audio.duration)) { const p = (audio.currentTime / audio.duration) * 100; if (progressFill) progressFill.style.width = `${p}%`; if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime); }});
     audio.addEventListener('durationchange', () => { if (durationEl) durationEl.textContent = isNaN(audio.duration) ? '0:00' : formatTime(audio.duration); });
-    audio.addEventListener('play', () => { isPlaying = true; updatePlayPauseUI(); updateUIForCurrentTrack(); startVisualizer(); if (window.api.sendPlaybackState) window.api.sendPlaybackState(true); });
-    audio.addEventListener('pause', () => { isPlaying = false; updatePlayPauseUI(); stopVisualizer(); if (window.api.sendPlaybackState) window.api.sendPlaybackState(false); });
+    audio.addEventListener('play', () => { 
+        isPlaying = true; 
+        document.body.classList.add('is-playing');
+        updatePlayPauseUI(); 
+        updateUIForCurrentTrack(); 
+        startVisualizer(); 
+        if (window.api.sendPlaybackState) window.api.sendPlaybackState(true); 
+    });
+    audio.addEventListener('pause', () => { 
+        isPlaying = false; 
+        document.body.classList.remove('is-playing');
+        updatePlayPauseUI(); 
+        stopVisualizer(); 
+        if (window.api.sendPlaybackState) window.api.sendPlaybackState(false); 
+    });
     audio.addEventListener('ended', () => { stopVisualizer(); if (loopMode === 'one') { audio.currentTime = 0; audio.play(); } else playNext(); });
     audio.addEventListener('error', (e) => { console.error("Audio playback error:", e); showNotification(tr('statusError')); isPlaying = false; updatePlayPauseUI(); });
     audio.addEventListener('volumechange', () => { currentVolume = audio.volume; if (volumeSlider) volumeSlider.value = currentVolume; if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume); clearTimeout(window.volumeSaveTimeout); window.volumeSaveTimeout = setTimeout(() => { window.api.setSetting('volume', currentVolume); }, 500); });
@@ -555,6 +585,12 @@ async function loadSettings() {
     if (visualizerSensitivity) { visSensitivity = settings.visSensitivity || 1.5; visualizerSensitivity.value = visSensitivity; }
     if (toggleDeleteSongs) { toggleDeleteSongs.checked = settings.deleteSongsEnabled || false; deleteSongsEnabled = settings.deleteSongsEnabled || false; }
     if (autoLoadLastFolderToggle) autoLoadLastFolderToggle.checked = settings.autoLoadLastFolder !== false;
+    if (toggleEnableFocus) {
+        settings.enableFocusMode = false;
+        toggleEnableFocus.checked = false;
+        if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = 'none';
+        document.body.classList.remove('focus-active');
+    }
     if (toggleEnableDrag) toggleEnableDrag.checked = settings.enableDragAndDrop !== false;
     if (toggleUseCustomColor) { toggleUseCustomColor.checked = settings.useCustomColor || false; if (accentColorContainer) accentColorContainer.classList.toggle('hidden', !toggleUseCustomColor.checked); }
     const et = settings.coverEmoji || 'note', ce = settings.customCoverEmoji || '🎵';
@@ -750,6 +786,12 @@ function setupEventListeners() {
     bind(animationSelect, 'change', (e) => { const m = e.target.value; window.api.setSetting('animationMode', m).catch(console.error); applyAnimationSetting(m); });
     bind(autoLoadLastFolderToggle, 'change', (e) => { window.api.setSetting('autoLoadLastFolder', e.target.checked); if (e.target.checked && currentFolderPath) window.api.setSetting('currentFolderPath', currentFolderPath); });
     bind(toggleEnableFocus, 'change', (e) => { window.api.setSetting('enableFocusMode', e.target.checked); if (toggleFocusModeBtn) toggleFocusModeBtn.style.display = e.target.checked ? 'flex' : 'none'; });
+    bind(toggleFocusModeBtn, 'click', () => {
+        document.body.classList.toggle('focus-active');
+        if (document.body.classList.contains('focus-active')) {
+            showNotification(tr('focusActiveNotify'));
+        }
+    });
     bind(toggleEnableDrag, 'change', (e) => { window.api.setSetting('enableDragAndDrop', e.target.checked); });
     bind(speedSlider, 'input', (e) => { 
         const v = parseFloat(e.target.value); 
@@ -807,11 +849,39 @@ function setupEventListeners() {
         if (reverbContainer) reverbContainer.style.display = enabled ? 'flex' : 'none';
         updateAudioEffects();
     });
-    bind(reverbSlider, 'input', (e) => {
+    bind($('#reverb-slider'), 'input', (e) => {
         const val = parseFloat(e.target.value);
         settings.reverbValue = val;
         window.api.setSetting('reverbValue', val);
         if (reverbValueEl) reverbValueEl.textContent = val + '%';
+        updateAudioEffects();
+    });
+
+    // Reset Buttons for Audio Extras
+    bind($('#bass-boost-reset-btn'), 'click', () => {
+        const def = 6;
+        settings.bassBoostValue = def;
+        if (bassBoostSlider) bassBoostSlider.value = def;
+        if (bassBoostValueEl) bassBoostValueEl.textContent = def + 'dB';
+        window.api.setSetting('bassBoostValue', def);
+        updateAudioEffects();
+    });
+
+    bind($('#treble-boost-reset-btn'), 'click', () => {
+        const def = 6;
+        settings.trebleBoostValue = def;
+        if (trebleBoostSlider) trebleBoostSlider.value = def;
+        if (trebleBoostValueEl) trebleBoostValueEl.textContent = def + 'dB';
+        window.api.setSetting('trebleBoostValue', def);
+        updateAudioEffects();
+    });
+
+    bind($('#reverb-reset-btn'), 'click', () => {
+        const def = 30;
+        settings.reverbValue = def;
+        if (reverbSlider) reverbSlider.value = def;
+        if (reverbValueEl) reverbValueEl.textContent = def + '%';
+        window.api.setSetting('reverbValue', def);
         updateAudioEffects();
     });
 
@@ -908,6 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
     accentColorPicker = $('#accent-color-picker');
     dropZone = $('#drop-zone'); toggleEnableDrag = $('#toggle-enable-drag'); toggleUseCustomColor = $('#toggle-use-custom-color');
     accentColorContainer = $('#accent-color-container');
+    toggleEnableFocus = $('#toggle-enable-focus'); toggleFocusModeBtn = $('#toggle-focus-mode-btn');
     speedSlider = $('#speed-slider'); speedValue = $('#speed-value');
     
     bassBoostToggle = $('#toggle-bass-boost');
@@ -927,6 +998,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     toggleCinemaMode = $('#toggle-cinema-mode');
     btnExportPlaylist = $('#btn-export-playlist');
+
+    // Feature Icons
+    const speakerLeft = $('#speaker-left');
+    const speakerRight = $('#speaker-right');
+    const reverbIcon = $('#reverb-active-icon');
+
+    // Reset Buttons
+    const bassResetBtn = $('#bass-boost-reset-btn');
+    const trebleResetBtn = $('#treble-boost-reset-btn');
+    const reverbResetBtn = $('#reverb-reset-btn');
 
     const overlays = [settingsOverlay, libraryOverlay, downloaderOverlay, editTitleOverlay, confirmDeleteOverlay];
     overlays.forEach(ov => { if (ov) ov.addEventListener('click', (e) => { if (e.target === ov) ov.classList.remove('visible'); }); });

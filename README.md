@@ -16,6 +16,7 @@ NovaWave is a professional, high-performance music player built with Electron. I
 *   🟣 **Modern UI:** Sleek glassmorphism interface with multiple themes (Blue, Dark, Dino, Xmas, Blurple, Rose).
 *   ⚪ **Mini-Player:** Compact mode for minimalistic control.
 *   ⚫ **Cinema Mode:** Dims the UI to maximize focus on the visual experience.
+*   ⭐ **Favorites:** Mark your top tracks and filter your playlist instantly.
 *   🟢 **Drag & Drop:** Easily add music by dragging files into the player.
 
 ### 🎧 <span style="color: #fbbf24;">Audio Extras</span>
@@ -41,6 +42,7 @@ NovaWave is a professional, high-performance music player built with Electron. I
 *   🟣 **Modernes UI:** Glassmorphism-Design mit verschiedenen Themes (Blau, Dark, Dino, Xmas, Blurple, Rose).
 *   ⚪ **Mini-Player:** Kompakter Modus für platzsparende Musiksteuerung.
 *   ⚫ **Kino-Modus:** Dimmt das Interface für vollen Fokus auf das Artwork.
+*   ⭐ **Favoriten:** Markiere deine Top-Titel und filtere deine Playlist blitzschnell.
 *   🟢 **Drag & Drop:** Einfaches Hinzufügen von Dateien durch Ziehen ins Fenster.
 
 ### 🎧 <span style="color: #fbbf24;">Audio-Extras</span>

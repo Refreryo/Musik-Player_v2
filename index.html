@@ -112,7 +112,12 @@
                     </div>
                 </div>
                 <div class="track-info-area">
-                    <h2 id="track-title-large" class="track-title-large"></h2>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                        <h2 id="track-title-large" class="track-title-large"></h2>
+                        <button id="main-favorite-btn" class="fav-track-btn" style="background:none; border:none; padding:0; cursor:pointer; display:none; color: var(--text-muted); flex-shrink: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </button>
+                    </div>
                     <p id="track-artist-large" class="track-artist-large"></p>
                 </div>
                 <div class="visualizer-container">
@@ -167,6 +172,9 @@
                             </button>
                         </div>
                     <div class="playlist-toolbar">
+                        <button id="toggle-favorites-btn" class="extras-button" style="display: none; padding: 6px 10px; margin-right: 5px; align-items: center; justify-content: center;" data-lang-title="enableFavoritesOption">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </button>
                         <input type="text" class="playlist-search-input" data-lang-placeholder="searchPlaceholder">
                         <select id="sort-select" class="playlist-sort-select">
                             <option value="name" data-lang-key="sortNameAZ">Name A-Z</option>
@@ -626,6 +634,19 @@
 
                     <div class="setting-item">
                         <div class="setting-label">
+                            <strong data-lang-key="enableFavoritesOption">Favorites Filter</strong>
+                            <p data-lang-key="enableFavoritesOptionDesc">Show a button to filter the playlist for favorites.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-favorites-option">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-label">
                             <strong data-lang-key="exportPlaylist">Playlist Export</strong>
                             <p data-lang-key="exportPlaylistDesc">Speichere die aktuelle Playlist als Datei.</p>
                         </div>
@@ -642,6 +663,7 @@
     <div id="context-menu" class="context-menu">
         <ul>
             <li id="context-menu-edit-title" data-lang-key="editTitle"></li>
+            <li id="context-menu-favorite" data-lang-key="toggleFavorite"></li>
             <li id="context-menu-show-folder" data-lang-key="showInFolder"></li>
         </ul>
     </div>

@@ -83,7 +83,10 @@ async function main() {
             trebleBoostEnabled: false,
             trebleBoostValue: 6,
             reverbEnabled: false,
-            reverbValue: 30
+            reverbValue: 30,
+            favorites: [],
+            enableFavoritesPlaylist: true,
+            miniMode: false
         }
     });
 

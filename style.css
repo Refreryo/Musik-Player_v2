@@ -1,4 +1,4 @@
-﻿/* --- THEME & COLORS --- */
+/* --- THEME & COLORS --- */
 :root {
   --bg-main: #0a0e1b;
   --bg-card: rgba(20, 26, 47, 0.8);
@@ -42,8 +42,6 @@
     background-attachment: fixed;
 }
   
-
-
 :root[data-theme="blurple"] {
     --bg-main: #1e1f2e;
     --bg-card: #2c2f48;
@@ -55,8 +53,6 @@
     --border-soft: rgba(114, 137, 218, 0.2);
     --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
-
-
 
 :root[data-theme="darkrose"] {
     --bg-main: #100f10;
@@ -374,8 +370,6 @@ input, textarea { user-select: text; }
     opacity: 0.8;
 }
 
-
-
 /* --- Animation 5: Aurora (Better Fluid Motion) --- */
 .background-animation.type-aurora::before {
     content: '';
@@ -397,8 +391,6 @@ input, textarea { user-select: text; }
     0% { transform: translateY(0) rotate(0deg); }
     100% { transform: translateY(110vh) rotate(360deg); }
 }
-
-
 
 @keyframes aurora-move {
     0% { transform: scale(1) translate(0, 0); opacity: 0.2; }
@@ -596,7 +588,7 @@ body.ready .app-shell {
 .main-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: 1fr 480px;
   gap: 24px;
   padding: 24px;
   overflow: hidden;
@@ -668,7 +660,7 @@ body.ready .app-shell {
     white-space: nowrap; 
     display: block;
     width: max-content;
-    padding: 0 20px;
+    padding: 0 10px 0 20px;
     text-align: center;
 }
 
@@ -776,16 +768,78 @@ input[type=range].volume-slider::-moz-range-thumb {
 }
 .load-btn:hover { opacity: 0.9; }
 
-.playlist-toolbar { display: flex; gap: 8px; margin-top: 10px; }
+.playlist-toolbar { 
+    display: flex; 
+    align-items: center;
+    gap: 8px; 
+    margin-top: 10px; 
+}
+
 .playlist-search-input {
-  flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-soft);
-  border-radius: 6px; padding: 6px 10px; color: var(--text-main); font-size: 0.8rem; outline: none;
+  flex: 1; 
+  background: rgba(0,0,0,0.2); 
+  border: 1px solid var(--border-soft);
+  border-radius: 6px; 
+  padding: 6px 10px; 
+  color: var(--text-main); 
+  font-size: 0.8rem; 
+  outline: none;
+}
+
+#toggle-favorites-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: none; /* Controlled by JS, but will be set to flex */
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+#toggle-favorites-btn.active {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.fav-track-btn {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.fav-track-btn:hover {
+    transform: scale(1.2);
+}
+
+.fav-track-btn:active {
+    transform: scale(0.9);
+}
+
+.track-row {
+  display: flex; 
+  align-items: center; 
+  padding: 8px 10px; 
+  border-radius: 8px;
+  cursor: pointer; 
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  gap: 4px;
 }
 .playlist-sort-select {
   background: rgba(0,0,0,0.2); border: 1px solid var(--border-soft);
   border-radius: 6px; padding: 6px 10px; color: var(--text-main); font-size: 0.8rem; outline: none;
   cursor: pointer;
   transition: border-color 0.2s;
+  min-width: 140px;
 }
 .playlist-sort-select option {
   background-color: var(--bg-card);
@@ -1224,8 +1278,6 @@ body.focus-active .focus-mode-btn {
     color: var(--accent);
 }
 
-
-
 .toggle-switch { position: relative; display: inline-block; width: 40px; height: 24px; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-card-light); transition: .4s; border-radius: 24px; }
@@ -1233,14 +1285,12 @@ body.focus-active .focus-mode-btn {
 input:checked + .slider { background-color: var(--accent); }
 input:checked + .slider:before { transform: translateX(16px); }
 
-
-
 /* =========================================
    RESPONSIVE DESIGN
    ========================================= */
 
 @media (max-width: 1350px) {
-  .main-grid { grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; }
+  .main-grid { grid-template-columns: 1fr 420px; gap: 20px; padding: 20px; }
   .cover-art-wrapper { width: 240px; height: 240px; }
   .music-emoji { font-size: 110px; }
   .volume-row { width: 75%; }
@@ -1516,7 +1566,9 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: rgba(0, 0, 0, 0.3);
 }
 
-
+/* =========================================
+   LIGHT THEME READABILITY FIX
+   ========================================= */
 
 /* =========================================
    MINI PLAYER MODE (< 450px width)
@@ -1602,6 +1654,17 @@ input:checked + .slider:before { transform: translateX(16px); }
       display: block; 
       -webkit-font-smoothing: subpixel-antialiased !important;
       transform: none !important;
+      padding: 0 5px 0 15px;
+  }
+  
+  #main-favorite-btn {
+      width: 24px;
+      height: 24px;
+  }
+  
+  #main-favorite-btn svg {
+      width: 18px;
+      height: 18px;
   }
   .track-artist-large { 
       font-size: 11px; 
@@ -1789,4 +1852,25 @@ body.cinema-mode .cover-art-container {
     opacity: 1;
     filter: none;
     z-index: 10;
+}
+
+#toggle-favorites-btn.active {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.fav-track-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.fav-track-btn:hover {
+    transform: scale(1.2);
+}
+
+.fav-track-btn:active {
+    transform: scale(0.9);
 }

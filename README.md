@@ -1,6 +1,6 @@
 # 🌊 NovaWave Music Player
 
-![Version](https://img.shields.io/badge/Version-2.5.0-c1d37f?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.5.1-c1d37f?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Open--Source-4ade80?style=for-the-badge)
 ![Author](https://img.shields.io/badge/Author-SnuggleDino-fbbf24?style=for-the-badge)
 
@@ -8,13 +8,13 @@ NovaWave is a professional, high-performance music player built with Electron. I
 
 ***
 
-## 🌟 What's New in v2.5.0?
+## 🌟 What's New in v2.5.1?
 
-*   ✨ **Snuggle Time (Theme-Pack):** An exclusive, curated experience featuring warm spring colors, "Loving Dinos" cover art, and a fixed Retro-Pixel visualizer with Snowfall effects.
-*   🔲 **Panorama Help Modal:** A redesigned, wide-screen landscape help menu for better readability and detailed control information.
-*   🖱️ **Draggable Modals:** All settings and info windows can now be freely moved around the screen by grabbing their headers.
-*   🛠️ **Developer Console:** New hidden debug features for performance monitoring and real-time window size analysis.
-*   📏 **Ultra-Responsive Layout:** Improved grid system that fluently handles extreme window sizes and orientations.
+*   ✨ **Snuggle Time (Theme-Pack):** Finalized exclusive experience with forced Snowfall animation, Retro-Pixel visualizer, and "Loving Dinos" image-based cover art with perfect transparency.
+*   💾 **Persistence Fix:** Rock-solid startup logic ensuring your theme pack and settings load correctly every time.
+*   🔲 **Panorama Help Modal:** Responsive landscape help menu with a quick-link to settings.
+*   🖱️ **Draggable Modals:** Move any settings window freely by its header.
+*   🛠️ **Developer Console:** Debug hotkeys for FPS and window dimensions.
 
 ***
 
@@ -72,6 +72,6 @@ NovaWave is a professional, high-performance music player built with Electron. I
 ***
 
 **🛠 Technical Stack:** Electron, music-metadata, node-id3, yt-dlp-wrap, electron-store.  
-**📦 Version:** 2.5.0  
+**📦 Version:** 2.5.1  
 **👤 Author:** SnuggleDino  
 **🕒 Last Updated:** Monday, December 29, 2025

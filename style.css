@@ -417,8 +417,10 @@ input, textarea { user-select: text; }
 }
 
 @keyframes snowfall {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(110vh) rotate(360deg); }
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: inherit; } /* Fade in quickly at start */
+    90% { opacity: inherit; } /* Keep visible until near bottom */
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
 @keyframes aurora-move {

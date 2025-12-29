@@ -292,7 +292,7 @@ const translations = {
         newBadge: 'NEU',
         devTitle: 'Entwickler & Hotkey-Info',
         devStandardHotkeys: 'Standard Hotkeys',
-        devDebugHotkeys: 'Debug & Entwickler (v2.5.0)',
+        devDebugHotkeys: 'Debug & Entwickler (v2.5.1)',
         devPlayPause: 'Abspielen / Pause',
         devNextSong: 'Nächster Song',
         devPrevSong: 'Vorheriger Song',
@@ -301,7 +301,7 @@ const translations = {
         devOpenMenu: 'Dieses Menü öffnen',
         devPerfHint: 'Performance-Hinweis (Island)',
         devWinSize: 'Fenstergröße Debug (Size)',
-        devFooter: 'NovaWave Entwicklerkonsole v2.5.0',
+        devFooter: 'NovaWave Entwicklerkonsole v2.5.1',
     },
     en: {
         appTitle: 'NovaWave - Music Player', appSubtitle: 'Local & YouTube',
@@ -386,7 +386,7 @@ const translations = {
         newBadge: 'NEW',
         devTitle: 'Developer & Hotkey Info',
         devStandardHotkeys: 'Standard Hotkeys',
-        devDebugHotkeys: 'Debug & Dev (v2.5.0)',
+        devDebugHotkeys: 'Debug & Dev (v2.5.1)',
         devPlayPause: 'Play / Pause',
         devNextSong: 'Next Track',
         devPrevSong: 'Previous Track',
@@ -395,7 +395,7 @@ const translations = {
         devOpenMenu: 'Open this menu',
         devPerfHint: 'Performance Hint (Island)',
         devWinSize: 'Window Size Debug (Size)',
-        devFooter: 'NovaWave Dev Console v2.5.0',
+        devFooter: 'NovaWave Dev Console v2.5.1',
         useCustomColorOption: 'Use Custom Accent Color',
         useCustomColorOptionDesc: 'Apply your selected color or use theme defaults.',
         coverEmoji: 'Cover Emoji',
@@ -966,26 +966,6 @@ async function loadSettings() {
     if (pmToggle) pmToggle.checked = performanceMode;
     if (performanceMode) setPerformanceMode(true);
 
-        // Load Snuggle Time
-
-        const stToggle = document.getElementById('toggle-snuggle-time');
-
-        if (stToggle) {
-
-            const enabled = !!settings.snuggleTimeEnabled;
-
-            stToggle.checked = enabled;
-
-            // Apply logic immediately to ensure all effects are forced
-
-            setTimeout(() => {
-
-                applySnuggleTime(enabled);
-
-            }, 150);
-
-        }
-
     // Load Stats Overlay
     showStatsOverlay = settings.showStatsOverlay || false;
     const statsToggle = document.getElementById('toggle-show-stats');
@@ -1003,16 +983,6 @@ async function loadSettings() {
 
     if (speedSlider) { const sp = settings.playbackSpeed || 1.0; speedSlider.value = sp; audio.playbackRate = sp; if(speedValue) speedValue.textContent = sp.toFixed(1) + 'x'; }
     
-    // Snuggle Time Master Override at the end of loading
-    if (settings.snuggleTimeEnabled) {
-        const stToggle = document.getElementById('toggle-snuggle-time');
-        if (stToggle) stToggle.checked = true;
-        // Longer timeout to ensure Electron settings are fully synchronized with the DOM
-        setTimeout(() => {
-            applySnuggleTime(true);
-        }, 250);
-    }
-
     if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) { 
         currentFolderPath = settings.currentFolderPath; 
         try { 
@@ -1029,15 +999,6 @@ async function loadSettings() {
     if (shuffleBtn) shuffleBtn.classList.toggle('mode-btn--active', shuffleOn);
     if (loopBtn) { loopBtn.classList.toggle('mode-btn--active', loopMode !== 'off'); updateLoopIcon(); }
     if (langButtons) langButtons.forEach(b => b.classList.toggle('active', b.dataset.lang === currentLanguage));
-
-    // Snuggle Time Master Override - ABSOLUTELY LAST STEP
-    if (settings.snuggleTimeEnabled) {
-        const stToggle = document.getElementById('toggle-snuggle-time');
-        if (stToggle) stToggle.checked = true;
-        setTimeout(() => {
-            applySnuggleTime(true);
-        }, 400); // 400ms to be safe
-    }
 }
 
 function updateLoopIcon() {
@@ -1063,13 +1024,15 @@ function applyAnimationSetting(mode) {
 
 function startSnowfall() {
     const isMini = document.body.classList.contains('is-mini');
-    const interval = isMini ? 800 : 400; // Slower spawn in mini mode
+    const interval = isMini ? 800 : 400;
     
     const createSnowflake = () => {
         if (!backgroundAnimationEl) return;
         const flake = document.createElement('span');
+        const duration = Math.random() * 5 + 8; // Longer, more varied duration (8-13s)
+        
         flake.style.left = Math.random() * 100 + 'vw';
-        flake.style.animationDuration = Math.random() * 5 + 5 + 's';
+        flake.style.animationDuration = duration + 's';
         flake.style.opacity = isMini ? (Math.random() * 0.4 + 0.2) : (Math.random() * 0.7 + 0.3);
         flake.style.fontSize = isMini ? (Math.random() * 6 + 8) + 'px' : (Math.random() * 10 + 12) + 'px';
         flake.innerHTML = '❄';
@@ -1082,7 +1045,9 @@ function startSnowfall() {
         flake.style.animationIterationCount = 'infinite';
         flake.style.filter = 'blur(1px)';
         backgroundAnimationEl.appendChild(flake);
-        setTimeout(() => { flake.remove(); }, 10000);
+        
+        // Remove after duration ends plus a buffer
+        setTimeout(() => { flake.remove(); }, (duration * 1000) + 100);
     };
     snowInterval = setInterval(createSnowflake, interval);
 }
@@ -1875,26 +1840,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    loadSettings().then(() => {
+    // Unified Initialization Sequence
+    async function initializeApp() {
         try {
-            if (settings.theme) document.documentElement.setAttribute('data-theme', settings.theme);
-            if (settings.useCustomColor && settings.customAccentColor) { 
+            await loadSettings();
+            
+            // Explicitly sync the toggle state to the global settings
+            const stToggle = document.getElementById('toggle-snuggle-time');
+            if (settings.snuggleTimeEnabled) {
+                if (stToggle) stToggle.checked = true;
+                applySnuggleTime(true);
+            } else {
+                if (stToggle) stToggle.checked = false;
+                applySnuggleTime(false);
+            }
+
+            if (settings.theme && !settings.snuggleTimeEnabled) {
+                document.documentElement.setAttribute('data-theme', settings.theme);
+            }
+
+            if (settings.useCustomColor && settings.customAccentColor && !settings.snuggleTimeEnabled) { 
                 document.documentElement.style.setProperty('--accent', settings.customAccentColor); 
                 if (accentColorPicker) accentColorPicker.value = settings.customAccentColor; 
             }
-            updateCachedColor(); // Update color cache after applying theme/custom settings
+
+            updateCachedColor();
             applyTranslations(); 
+            
             audio.volume = currentVolume; 
             if (volumeSlider) volumeSlider.value = currentVolume; 
             if (volumeIcon) volumeIcon.innerHTML = getVolumeIcon(currentVolume);
+
+            // Final check to ensure the Snuggle Time emoji is set after all track updates
+            if (settings.snuggleTimeEnabled) {
+                setTimeout(() => updateEmoji('loving_dinos'), 500);
+            }
+
+            // Hide Splash Screen
+            setTimeout(hideSplash, 2000);
         } catch (err) {
-            console.error("Error applying settings:", err);
+            console.error("Initialization failed:", err);
+            hideSplash();
         }
-        
-        // Hide Splash Screen after Pulse
-        setTimeout(hideSplash, 2500);
-    }).catch(e => {
-        console.error("Settings load failed:", e);
-        hideSplash();
-    });
+    }
+
+    initializeApp();
 });

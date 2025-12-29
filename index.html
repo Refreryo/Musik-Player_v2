@@ -41,6 +41,7 @@
         <div class="stats-item"><span class="stat-label" data-lang-key="statFrame">Frame</span>: <span id="stat-time" class="stat-value">16ms</span></div>
         <div class="stats-item"><span class="stat-label" data-lang-key="statStatus">Status</span>: <span id="stat-lag" class="stat-value">Stabil</span></div>
         <div class="stats-item"><span class="stat-label" data-lang-key="perfModeLabel">Performance</span>: <span id="stat-perf-info" class="stat-value">-</span></div>
+        <div id="debug-size-item" class="stats-item hidden"><span class="stat-label">Size</span>: <span id="stat-size" class="stat-value">0x0</span></div>
     </div>
 
     <div class="app-shell">
@@ -70,6 +71,9 @@
                     </div>
                 </div>
                 <div class="header-item">
+                    <button id="user-help-btn" class="control-btn" style="margin-right: 12px;" data-lang-title="helpTitle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </button>
                     <button id="toggle-downloader-btn" class="control-btn" style="margin-right: 12px;" data-lang-title="toggleDownloader">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     </button>
@@ -82,7 +86,7 @@
 
         <main class="main-grid">
             <section class="player-column">
-                <div class="cover-art-container" style="position: relative; width: 260px; height: 260px; margin: 0 auto;">
+                <div class="cover-art-container">
                     <!-- Unified Active Features Indicator -->
                     <div id="active-features-indicator" class="active-features-container">
                         <div class="features-badge-icon">
@@ -190,7 +194,7 @@
         </main>
 
         <footer class="app-footer">
-            <div id="footer-left">v2.4.9</div>
+            <div id="footer-left">v2.5.0</div>
         </footer>
     </div>
     
@@ -270,9 +274,21 @@
                                 <option value="dark" data-lang-key="themeDark">Dark</option>
                                 <option value="blurple" data-lang-key="themePurple">Purple</option>
                                 <option value="darkrose" data-lang-key="themeRose">Rose</option>
-                                <option value="dinolove" data-lang-key="themeDino">Dino</option>
                                 <option value="xmas" data-lang-key="themeXmas">Christmas</option>
                             </select>
+                        </div>
+                    </div>
+                    <div id="snuggle-pack-item" class="setting-item snuggle-pack-container">
+                        <div id="snuggle-new-badge" class="new-badge-dancing"></div>
+                        <div class="setting-label">
+                            <strong class="snuggle-title">✨ Snuggle Time (Theme-Pack)</strong>
+                            <p data-lang-key="snuggleTimeDesc">Aktiviere das exklusive SnuggleDino Erlebnis mit festen Effekten.</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-snuggle-time">
+                                <span class="slider"></span>
+                            </label>
                         </div>
                     </div>
                     <div class="setting-item">
@@ -391,6 +407,7 @@
                             <select id="emoji-select" class="settings-select">
                                 <option value="note" data-lang-key="emojiNote"></option>
                                 <option value="dino" data-lang-key="emojiDino"></option>
+                                <option value="loving_dinos" data-lang-key="emojiLovingDinos">Loving Dinos</option>
                                 <option value="gift" data-lang-key="emojiGift"></option>
                                 <option value="custom" data-lang-key="emojiCustom"></option>
                             </select>
@@ -733,6 +750,88 @@
                 </svg>
             </div>
             <span id="notification-message"></span>
+        </div>
+    </div>
+
+    <!-- ================= USER HELP MODAL ================= -->
+    <div id="user-help-overlay" class="overlay-container">
+        <div class="glass-panel settings-modal" style="max-width: 500px;">
+            <div class="settings-header">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:10px;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> <span data-lang-key="helpTitle">Hilfe & Bedienung</span></h3>
+                <button id="user-help-close-btn" class="close-modal-btn">&times;</button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h4 class="settings-section-title" data-lang-key="helpPlayback">Wiedergabe</h4>
+                    <ul class="help-list">
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span data-lang-key="helpPlayDesc">Klicke auf den Play-Button oder drücke Leertaste.</span>
+                        </li>
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                            <span data-lang-key="helpNextDesc">Nutze die Pfeiltasten für nächsten/vorherigen Song.</span>
+                        </li>
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 17 5-5-5-5"></path><path d="m6 17 5-5-5-5"></path></svg>
+                            <span data-lang-key="helpSkipDesc">Halte Umschalt + Pfeiltasten zum Spulen (5s).</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="settings-section">
+                    <h4 class="settings-section-title" data-lang-key="helpFeatures">Funktionen</h4>
+                    <ul class="help-list">
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span data-lang-key="helpDragDesc">Ziehe Musikdateien direkt in das Fenster.</span>
+                        </li>
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
+                            <span data-lang-key="helpMiniDesc">Nutze den MINI-Schalter für den kompakten Player.</span>
+                        </li>
+                        <li>
+                            <svg class="help-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <span data-lang-key="helpFavDesc">Deine Lieblingssongs findest du schneller, wenn du sie mit dem Stern markierst.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div id="help-to-settings-btn" class="help-settings-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span data-lang-key="helpOpenSettings">Öffne die Einstellungen hier</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--accent); text-align: center; font-weight: 600; margin-top: 10px;">NovaWave v2.5.0 • Enjoy your Snuggle-Time</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DEV HOTKEY MODAL ================= -->
+    <div id="dev-modal-overlay" class="overlay-container">
+        <div class="glass-panel settings-modal" style="max-width: 500px;">
+            <div class="settings-header">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:10px;"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg> <span data-lang-key="devTitle">Developer & Hotkey Info</span></h3>
+                <button id="dev-modal-close-btn" class="close-modal-btn">&times;</button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h4 class="settings-section-title" data-lang-key="devStandardHotkeys">Standard Hotkeys</h4>
+                    <div class="dev-hotkey-list">
+                        <div class="dev-hotkey-item"><span>Space</span> <span data-lang-key="devPlayPause">Play / Pause</span></div>
+                        <div class="dev-hotkey-item"><span>Arrow Right</span> <span data-lang-key="devNextSong">Nächster Song</span></div>
+                        <div class="dev-hotkey-item"><span>Arrow Left</span> <span data-lang-key="devPrevSong">Vorheriger Song</span></div>
+                        <div class="dev-hotkey-item"><span>Arrow Up/Down</span> <span data-lang-key="devVol">Lautstärke +/-</span></div>
+                        <div class="dev-hotkey-item"><span>Shift + Arrows</span> <span data-lang-key="devSkip">5 Sek. vor/zurück</span></div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4 class="settings-section-title" data-lang-key="devDebugHotkeys">Debug & Dev (v2.5.0)</h4>
+                    <div class="dev-hotkey-list">
+                        <div class="dev-hotkey-item"><span>STRG + 1</span> <span data-lang-key="devOpenMenu">Dieses Menü öffnen</span></div>
+                        <div class="dev-hotkey-item"><span>STRG + 1 + X</span> <span data-lang-key="devPerfHint">Performance Hint (Island)</span></div>
+                        <div class="dev-hotkey-item"><span>STRG + 1 + H</span> <span data-lang-key="devWinSize">Fenstergröße Debug (Size)</span></div>
+                    </div>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center;" data-lang-key="devFooter">NovaWave Dev Console v2.5.0</p>
+            </div>
         </div>
     </div>
 </body>

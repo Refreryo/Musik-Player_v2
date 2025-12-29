@@ -183,7 +183,7 @@ const translations = {
         themeBlue: 'Standard Blau', themeDark: 'Mitternachts-Lila', themePurple: 'Blurple', themeRose: 'Tiefrot', themeDino: 'Dino Grün', themeXmas: 'Weihnachten',
         shuffle: 'Zufallswiedergabe', previous: 'Zurück', playPause: 'Abspielen/Pause',
         next: 'Weiter', loop: 'Wiederholen', settings: 'Einstellungen', close: 'Schließen',
-        toggleDownloader: 'Downloader umschalten', deleteSong: 'Song löschen',
+        toggleDownloader: 'YouTube Downloader', deleteSong: 'Song löschen',
         confirmDeleteTitle: 'Song löschen bestätigen',
         confirmDeleteMessage: 'Möchten Sie diesen Song wirklich unwiderruflich löschen?',
         confirmDeleteButton: 'Ja, löschen',
@@ -218,6 +218,7 @@ const translations = {
         coverEmojiDescription: 'Wähle ein Emoji für das Album-Cover in der Mitte.',
         emojiNote: 'Musiknote',
         emojiDino: 'Dino',
+        emojiLovingDinos: 'Verliebte Dinos',
         emojiGift: 'Weihnachtsgeschenk',
         emojiCustom: 'Benutzerdefiniert',
         customEmoji: 'Benutzerdefiniertes Emoji',
@@ -277,6 +278,30 @@ const translations = {
         fpsLimitDesc: 'Begrenze die Bildrate für Visualizer und Animationen (15 - 120).',
         statStatus: 'Status', statStable: 'Stabil', statUnstable: 'Instabil', statFrame: 'Frame',
         statStability: 'Stabilität', statPowerSave: 'Energiesparen',
+        helpTitle: 'Hilfe & Bedienung',
+        helpPlayback: 'Wiedergabe',
+        helpFeatures: 'Funktionen',
+        helpPlayDesc: 'Starte deine Musik ganz einfach mit dem Play-Button oder der Leertaste.',
+        helpNextDesc: 'Wechsle Songs mit den Pfeiltasten (Links/Rechts) oder klicke in die Playlist.',
+        helpSkipDesc: 'Halte die Umschalt-Taste (Shift) gedrückt und nutze die Pfeiltasten zum Spulen.',
+        helpDragDesc: 'Möchtest du neue Lieder hören? Ziehe sie einfach per Drag & Drop in den Player.',
+        helpMiniDesc: 'Für mehr Platz auf dem Desktop: Der MINI-Modus bietet dir das Wesentliche.',
+        helpFavDesc: 'Deine Lieblingssongs findest du schneller, wenn du sie mit dem Stern markierst.',
+        helpOpenSettings: 'Öffne die Einstellungen hier für mehr Details',
+        snuggleTimeDesc: 'Aktiviere das exklusive SnuggleDino Erlebnis mit festen Effekten.',
+        newBadge: 'NEU',
+        devTitle: 'Entwickler & Hotkey-Info',
+        devStandardHotkeys: 'Standard Hotkeys',
+        devDebugHotkeys: 'Debug & Entwickler (v2.5.0)',
+        devPlayPause: 'Abspielen / Pause',
+        devNextSong: 'Nächster Song',
+        devPrevSong: 'Vorheriger Song',
+        devVol: 'Lautstärke +/-',
+        devSkip: '5 Sek. vor/zurück',
+        devOpenMenu: 'Dieses Menü öffnen',
+        devPerfHint: 'Performance-Hinweis (Island)',
+        devWinSize: 'Fenstergröße Debug (Size)',
+        devFooter: 'NovaWave Entwicklerkonsole v2.5.0',
     },
     en: {
         appTitle: 'NovaWave - Music Player', appSubtitle: 'Local & YouTube',
@@ -296,7 +321,7 @@ const translations = {
         themeBlue: 'Standard Blue', themeDark: 'Midnight Purple', themePurple: 'Blurple', themeRose: 'Deep Rose', themeDino: 'Dino Green', themeXmas: 'Christmas',
         shuffle: 'Shuffle', previous: 'Previous', playPause: 'Play/Pause',
         next: 'Next', loop: 'Loop', settings: 'Settings', close: 'Close',
-        toggleDownloader: 'Toggle Downloader', deleteSong: 'Delete Song',
+        toggleDownloader: 'YouTube Downloader', deleteSong: 'Delete Song',
         confirmDeleteTitle: 'Confirm Song Deletion',
         confirmDeleteMessage: 'Are you sure you want to permanently delete this song?',
         confirmDeleteButton: 'Yes, Delete',
@@ -347,12 +372,37 @@ const translations = {
         fpsLimitDesc: 'Limit the frame rate for visualizer and animations (15 - 120).',
         statStatus: 'Status', statStable: 'Stable', statUnstable: 'Unstable', statFrame: 'Frame',
         statStability: 'Stability', statPowerSave: 'Power Save',
+        helpTitle: 'Help & Controls',
+        helpPlayback: 'Playback',
+        helpFeatures: 'Features',
+        helpPlayDesc: 'Start your music journey by clicking Play or pressing the Space bar.',
+        helpNextDesc: 'Switch tracks using the Arrow keys (Left/Right) or pick from the playlist.',
+        helpSkipDesc: 'Hold the Shift key and use Arrows to seek 5 seconds forward or backward.',
+        helpDragDesc: 'Want new tracks? Just drag and drop music files or folders into the window.',
+        helpMiniDesc: 'Need more space? The MINI mode gives you a compact player experience.',
+        helpFavDesc: 'Keep your favorites close! Use the star icon to highlight songs you love.',
+        helpOpenSettings: 'Open the settings here for more details',
+        snuggleTimeDesc: 'Activate the exclusive SnuggleDino experience with fixed effects.',
+        newBadge: 'NEW',
+        devTitle: 'Developer & Hotkey Info',
+        devStandardHotkeys: 'Standard Hotkeys',
+        devDebugHotkeys: 'Debug & Dev (v2.5.0)',
+        devPlayPause: 'Play / Pause',
+        devNextSong: 'Next Track',
+        devPrevSong: 'Previous Track',
+        devVol: 'Volume +/-',
+        devSkip: 'Skip 5s fwd/back',
+        devOpenMenu: 'Open this menu',
+        devPerfHint: 'Performance Hint (Island)',
+        devWinSize: 'Window Size Debug (Size)',
+        devFooter: 'NovaWave Dev Console v2.5.0',
         useCustomColorOption: 'Use Custom Accent Color',
         useCustomColorOptionDesc: 'Apply your selected color or use theme defaults.',
         coverEmoji: 'Cover Emoji',
         coverEmojiDescription: 'Choose an emoji for the album cover in the center.',
         emojiNote: 'Music Note',
         emojiDino: 'Dino',
+        emojiLovingDinos: 'Loving Dinos',
         emojiGift: 'Christmas Gift',
         emojiCustom: 'Custom',
         customEmoji: 'Custom Emoji',
@@ -445,7 +495,11 @@ async function updateUIForCurrentTrack() {
         if (svg) svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
     }
 
-    updateEmoji(settings.coverEmoji || 'note', settings.customCoverEmoji);
+    if (settings.snuggleTimeEnabled) {
+        updateEmoji('loving_dinos');
+    } else {
+        updateEmoji(settings.coverEmoji || 'note', settings.customCoverEmoji);
+    }
     updateActiveTrackInPlaylist();
     updateTrackTitleScroll();
     if (isPlaying && lastNotifiedPath !== track.path) { showNotification(`${tr('nowPlaying')}: ${track.title}`); lastNotifiedPath = track.path; }
@@ -501,6 +555,14 @@ function renderPlaylist() {
 
 function applyTranslations() {
     document.querySelectorAll('[data-lang-key]').forEach(el => { const text = tr(el.dataset.langKey); if (text) el.textContent = text; });
+    
+    // Animate the Snuggle New Badge
+    const newBadgeEl = document.getElementById('snuggle-new-badge');
+    if (newBadgeEl) {
+        const text = tr('newBadge');
+        newBadgeEl.innerHTML = text.split('').map(char => `<span>${char}</span>`).join('');
+    }
+
     document.querySelectorAll('[data-lang-placeholder]').forEach(el => { el.placeholder = tr(el.dataset.langPlaceholder); });
     document.querySelectorAll('[data-lang-title]').forEach(el => { el.title = tr(el.dataset.langTitle); });
     const dropZoneTextEl = $('#drop-zone p'); if (dropZoneTextEl) dropZoneTextEl.textContent = tr('dropZoneText');
@@ -522,10 +584,24 @@ function updateTrackTitleScroll() {
 }
 
 function updateEmoji(emojiType, customEmoji) {
-    if (!musicEmojiEl) return; let emoji = '🎵';
-    if (emojiType === 'note') emoji = '🎵'; else if (emojiType === 'dino') emoji = '🦖'; else if (emojiType === 'gift') emoji = '🎁';
+    if (!musicEmojiEl) return; 
+    let emoji = '🎵';
+    let isImage = false;
+
+    if (emojiType === 'note') emoji = '🎵'; 
+    else if (emojiType === 'dino') emoji = '🦖'; 
+    else if (emojiType === 'loving_dinos') {
+        emoji = './assets/Two_Loving_Cute_Dinos.png';
+        isImage = true;
+    }
+    else if (emojiType === 'gift') emoji = '🎁';
     else if (emojiType === 'custom' && customEmoji) emoji = customEmoji.trim();
-    musicEmojiEl.textContent = emoji;
+    
+    if (isImage) {
+        musicEmojiEl.innerHTML = `<img src="${emoji}" alt="Dino" draggable="false" ondragstart="return false;" style="background: transparent !important; border: none !important;">`;
+    } else {
+        musicEmojiEl.textContent = emoji;
+    }
 }
 
 async function handleDownload() {
@@ -650,9 +726,14 @@ function updateAnalyserSettings() {
 }
 
 function drawVisualizer() {
-    if (!visualizerRunning || performanceMode || !isPlaying || !visualizerEnabled || !analyser || document.hidden) { 
+    if (!visualizerRunning || performanceMode || !isPlaying || !visualizerEnabled || !analyser) { 
         visualizerRunning = false;
         return; 
+    }
+
+    if (document.hidden) {
+        requestAnimationFrame(drawVisualizer);
+        return;
     }
 
     const now = performance.now();
@@ -731,6 +812,49 @@ function drawVisualizer() {
     }
 }
 
+function applySnuggleTime(enabled) {
+    document.body.classList.toggle('snuggle-time-active', enabled);
+    const accentToggle = document.getElementById('toggle-use-custom-color');
+    
+    if (enabled) {
+        document.documentElement.setAttribute('data-theme', 'dinolove');
+        currentVisualizerStyle = 'retro';
+        if (visualizerStyleSelect) visualizerStyleSelect.value = 'retro';
+        applyAnimationSetting('xmas');
+        if (animationSelect) animationSelect.value = 'xmas';
+        updateEmoji('loving_dinos');
+        if (emojiSelect) emojiSelect.value = 'loving_dinos';
+
+        if (accentToggle) {
+            accentToggle.checked = false;
+            accentToggle.disabled = true;
+            if (accentColorContainer) accentColorContainer.classList.add('hidden');
+            document.documentElement.style.removeProperty('--accent');
+        }
+        updateCachedColor();
+    } else {
+        const th = settings.theme || 'blue';
+        document.documentElement.setAttribute('data-theme', th);
+        currentVisualizerStyle = settings.visualizerStyle || 'bars';
+        if (visualizerStyleSelect) visualizerStyleSelect.value = currentVisualizerStyle;
+        applyAnimationSetting(settings.animationMode || 'flow');
+        if (animationSelect) animationSelect.value = settings.animationMode || 'flow';
+        const et = settings.coverEmoji || 'note';
+        updateEmoji(et, settings.customCoverEmoji);
+        if (emojiSelect) emojiSelect.value = et;
+
+        if (accentToggle) {
+            accentToggle.disabled = false;
+            accentToggle.checked = !!settings.useCustomColor;
+            if (accentColorContainer) accentColorContainer.classList.toggle('hidden', !accentToggle.checked);
+            if (accentToggle.checked) {
+                document.documentElement.style.setProperty('--accent', settings.customAccentColor || '#38bdf8');
+            }
+        }
+        updateCachedColor();
+    }
+}
+
 function setupAudioEvents() {
     audio.addEventListener('timeupdate', () => { if (!isNaN(audio.duration)) { const p = (audio.currentTime / audio.duration) * 100; if (progressFill) progressFill.style.width = `${p}%`; if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime); }});
     audio.addEventListener('durationchange', () => { if (durationEl) durationEl.textContent = isNaN(audio.duration) ? '0:00' : formatTime(audio.duration); });
@@ -768,10 +892,9 @@ async function loadSettings() {
     }
 
     if (toggleMiniMode) {
-        const mm = !!settings.miniMode;
-        toggleMiniMode.checked = mm;
-        document.body.classList.toggle('is-mini', mm);
-        if (mm) window.api.setWindowSize(340, 520);
+        // App always starts in normal mode to avoid startup bugs
+        toggleMiniMode.checked = false;
+        document.body.classList.remove('is-mini');
     }
     currentVolume = settings.volume !== undefined ? settings.volume : 0.2; audio.volume = currentVolume; shuffleOn = settings.shuffle || false; loopMode = settings.loop || 'off'; currentLanguage = settings.language || 'de'; sortMode = settings.sortMode || 'name';
     if (downloadFolderInput) downloadFolderInput.value = settings.downloadFolder || '';
@@ -843,6 +966,26 @@ async function loadSettings() {
     if (pmToggle) pmToggle.checked = performanceMode;
     if (performanceMode) setPerformanceMode(true);
 
+        // Load Snuggle Time
+
+        const stToggle = document.getElementById('toggle-snuggle-time');
+
+        if (stToggle) {
+
+            const enabled = !!settings.snuggleTimeEnabled;
+
+            stToggle.checked = enabled;
+
+            // Apply logic immediately to ensure all effects are forced
+
+            setTimeout(() => {
+
+                applySnuggleTime(enabled);
+
+            }, 150);
+
+        }
+
     // Load Stats Overlay
     showStatsOverlay = settings.showStatsOverlay || false;
     const statsToggle = document.getElementById('toggle-show-stats');
@@ -859,10 +1002,42 @@ async function loadSettings() {
     updateAudioEffects();
 
     if (speedSlider) { const sp = settings.playbackSpeed || 1.0; speedSlider.value = sp; audio.playbackRate = sp; if(speedValue) speedValue.textContent = sp.toFixed(1) + 'x'; }
-    if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) { currentFolderPath = settings.currentFolderPath; try { const result = await window.api.refreshMusicFolder(currentFolderPath); if (result && result.tracks) { basePlaylist = result.tracks; sortPlaylist(sortMode); updateUIForCurrentTrack(); } } catch (e) { console.error(e); } }
+    
+    // Snuggle Time Master Override at the end of loading
+    if (settings.snuggleTimeEnabled) {
+        const stToggle = document.getElementById('toggle-snuggle-time');
+        if (stToggle) stToggle.checked = true;
+        // Longer timeout to ensure Electron settings are fully synchronized with the DOM
+        setTimeout(() => {
+            applySnuggleTime(true);
+        }, 250);
+    }
+
+    if (settings.currentFolderPath && (settings.autoLoadLastFolder !== false)) { 
+        currentFolderPath = settings.currentFolderPath; 
+        try { 
+            const result = await window.api.refreshMusicFolder(currentFolderPath); 
+            if (result && result.tracks) { 
+                basePlaylist = result.tracks; 
+                sortPlaylist(sortMode); 
+                updateUIForCurrentTrack(); 
+            } 
+        } catch (e) { 
+            console.error(e); 
+        } 
+    }
     if (shuffleBtn) shuffleBtn.classList.toggle('mode-btn--active', shuffleOn);
     if (loopBtn) { loopBtn.classList.toggle('mode-btn--active', loopMode !== 'off'); updateLoopIcon(); }
     if (langButtons) langButtons.forEach(b => b.classList.toggle('active', b.dataset.lang === currentLanguage));
+
+    // Snuggle Time Master Override - ABSOLUTELY LAST STEP
+    if (settings.snuggleTimeEnabled) {
+        const stToggle = document.getElementById('toggle-snuggle-time');
+        if (stToggle) stToggle.checked = true;
+        setTimeout(() => {
+            applySnuggleTime(true);
+        }, 400); // 400ms to be safe
+    }
 }
 
 function updateLoopIcon() {
@@ -887,13 +1062,16 @@ function applyAnimationSetting(mode) {
 }
 
 function startSnowfall() {
+    const isMini = document.body.classList.contains('is-mini');
+    const interval = isMini ? 800 : 400; // Slower spawn in mini mode
+    
     const createSnowflake = () => {
         if (!backgroundAnimationEl) return;
         const flake = document.createElement('span');
         flake.style.left = Math.random() * 100 + 'vw';
         flake.style.animationDuration = Math.random() * 5 + 5 + 's';
-        flake.style.opacity = Math.random() * 0.7 + 0.3;
-        flake.style.fontSize = (Math.random() * 10 + 12) + 'px';
+        flake.style.opacity = isMini ? (Math.random() * 0.4 + 0.2) : (Math.random() * 0.7 + 0.3);
+        flake.style.fontSize = isMini ? (Math.random() * 6 + 8) + 'px' : (Math.random() * 10 + 12) + 'px';
         flake.innerHTML = '❄';
         flake.style.position = 'absolute';
         flake.style.top = '-20px';
@@ -906,9 +1084,18 @@ function startSnowfall() {
         backgroundAnimationEl.appendChild(flake);
         setTimeout(() => { flake.remove(); }, 10000);
     };
-    snowInterval = setInterval(createSnowflake, 400);
+    snowInterval = setInterval(createSnowflake, interval);
 }
 function formatTime(s) { if (isNaN(s)) return '0:00'; const m = Math.floor(s / 60), sc = Math.floor(s % 60).toString().padStart(2, '0'); return `${m}:${sc}`; }
+
+function updateDebugSize() {
+    const sizeEl = document.getElementById('stat-size');
+    const debugItem = document.getElementById('debug-size-item');
+    if (sizeEl && debugItem && !debugItem.classList.contains('hidden')) {
+        sizeEl.textContent = `${window.innerWidth} x ${window.innerHeight}`;
+    }
+}
+
 function getVolumeIcon(v) {
     if (v === 0) return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
     if (v < 0.5) return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>`;
@@ -1044,6 +1231,17 @@ function setupEventListeners() {
         const key = e.key.toLowerCase();
         pressedKeys.add(key);
 
+        // Hotkey: CTRL + 1 (Dev Info)
+        if (pressedKeys.has('control') && pressedKeys.has('1') && pressedKeys.size === 2) {
+            e.preventDefault();
+            const devModal = document.getElementById('dev-modal-overlay');
+            // Nur öffnen, wenn es nicht bereits sichtbar ist
+            if (devModal && !devModal.classList.contains('visible')) {
+                devModal.classList.add('visible');
+            }
+            return;
+        }
+
         // Hotkey: CTRL + 1 + X
         if (pressedKeys.has('control') && pressedKeys.has('1') && pressedKeys.has('x')) {
             e.preventDefault();
@@ -1051,11 +1249,39 @@ function setupEventListeners() {
             return;
         }
 
+        // Hotkey: CTRL + 1 + H (Debug Size)
+        if (pressedKeys.has('control') && pressedKeys.has('1') && pressedKeys.has('h')) {
+            e.preventDefault();
+            const debugEl = document.getElementById('debug-size-item');
+            const statsOverlay = document.getElementById('stats-overlay');
+            if (debugEl && statsOverlay) {
+                const isHidden = debugEl.classList.contains('hidden');
+                debugEl.classList.toggle('hidden', !isHidden);
+                if (isHidden) {
+                    statsOverlay.classList.remove('hidden');
+                    updateDebugSize();
+                }
+            }
+            return;
+        }
+
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         switch (e.code) { 
             case 'Space': e.preventDefault(); if (isPlaying) audio.pause(); else audio.play(); break; 
-            case 'ArrowRight': playNext(); break; 
-            case 'ArrowLeft': playPrev(); break; 
+            case 'ArrowRight': 
+                if (e.shiftKey) {
+                    audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+                } else {
+                    playNext(); 
+                }
+                break; 
+            case 'ArrowLeft': 
+                if (e.shiftKey) {
+                    audio.currentTime = Math.max(0, audio.currentTime - 5);
+                } else {
+                    playPrev(); 
+                }
+                break; 
             case 'ArrowUp': e.preventDefault(); audio.volume = Math.min(1, audio.volume + 0.05); break; 
             case 'ArrowDown': e.preventDefault(); audio.volume = Math.max(0, audio.volume - 0.05); break; 
         }
@@ -1066,13 +1292,17 @@ function setupEventListeners() {
     });
     bind(toggleMiniMode, 'change', (e) => { 
         const isMini = e.target.checked;
-        window.api.setSetting('miniMode', isMini);
         if (isMini) {
             document.body.classList.add('is-mini');
             window.api.setWindowSize(340, 520); 
         } else {
             document.body.classList.remove('is-mini');
             window.api.setWindowSize(1300, 900); 
+        }
+        // Refresh animation to apply Mini-Player specific adjustments (like snowflake size)
+        const currentAnim = (animationSelect) ? animationSelect.value : (settings.animationMode || 'off');
+        if (currentAnim === 'xmas') {
+            applyAnimationSetting('xmas');
         }
     });
     bind(downloadBtn, 'click', handleDownload);
@@ -1291,6 +1521,16 @@ function setupEventListeners() {
         if (overlay) overlay.classList.toggle('hidden', !showStatsOverlay);
     });
 
+    // Snuggle Time Theme-Pack Toggle
+    const toggleSnuggleTime = document.getElementById('toggle-snuggle-time');
+    bind(toggleSnuggleTime, 'change', (e) => {
+        const enabled = e.target.checked;
+        settings.snuggleTimeEnabled = enabled;
+        window.api.setSetting('snuggleTimeEnabled', enabled);
+        applySnuggleTime(enabled);
+        showNotification(enabled ? '✨ Snuggle Time Active' : 'Snuggle Time Deactivated');
+    });
+
     // FPS Limit Handlers
     const fpsIn = document.getElementById('fps-input');
     const fpsSl = document.getElementById('fps-slider');
@@ -1425,13 +1665,65 @@ function setupEventListeners() {
         renderPlaylist(); updateUIForCurrentTrack(); confirmDeleteOverlay.classList.remove('visible'); trackToDeletePath = null; showNotification(tr('songDeleted')); } 
     });
     let resTimeout; new ResizeObserver(() => { if (visualizerCanvas && visualizerContainer) { visualizerCanvas.width = visualizerContainer.clientWidth; visualizerCanvas.height = visualizerContainer.clientHeight; } }).observe(visualizerContainer);
-    window.addEventListener('resize', () => { clearTimeout(resTimeout); resTimeout = setTimeout(updateTrackTitleScroll, 100); });
+    window.addEventListener('resize', () => { 
+        clearTimeout(resTimeout); 
+        resTimeout = setTimeout(() => {
+            updateTrackTitleScroll();
+            updateDebugSize();
+        }, 100); 
+    });
 }
 
 function showNotification(msg) {
     if (!notificationBar || !notificationMessage) return; if (notificationTimeout) clearTimeout(notificationTimeout);
     notificationMessage.textContent = msg; notificationBar.classList.remove('visible'); void notificationBar.offsetWidth; notificationBar.classList.add('visible');
     notificationTimeout = setTimeout(() => { notificationBar.classList.remove('visible'); }, 5000);
+}
+
+function makeDraggable(modal, handle) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    handle.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        // Only drag if left mouse button is pressed
+        if (e.button !== 0) return;
+        
+        e.preventDefault();
+        
+        // Get current position
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        // Switch to absolute positioning if not already done
+        if (modal.style.position !== 'absolute') {
+            const rect = modal.getBoundingClientRect();
+            modal.style.position = 'absolute';
+            modal.style.top = rect.top + "px";
+            modal.style.left = rect.left + "px";
+            modal.style.transform = 'none';
+            modal.style.margin = '0';
+        }
+
+        modal.classList.add('is-dragging');
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        modal.style.top = (modal.offsetTop - pos2) + "px";
+        modal.style.left = (modal.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        modal.classList.remove('is-dragging');
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1462,6 +1754,34 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmDeleteCloseBtn = $('#confirm-delete-close-btn');
     autoLoadLastFolderToggle = $('#toggle-auto-load-last-folder'); toggleMiniMode = $('#toggle-mini-mode');
     notificationBar = $('#notification-bar'); notificationMessage = $('#notification-message');
+    
+    // Dev Modal Elements
+    const devModalOverlay = $('#dev-modal-overlay');
+    const devModalCloseBtn = $('#dev-modal-close-btn');
+
+    // User Help Modal Elements
+    const userHelpOverlay = $('#user-help-overlay');
+    const userHelpBtn = $('#user-help-btn');
+    const userHelpCloseBtn = $('#user-help-close-btn');
+
+    if (userHelpBtn && userHelpOverlay) {
+        userHelpBtn.addEventListener('click', () => userHelpOverlay.classList.add('visible'));
+    }
+    if (userHelpCloseBtn && userHelpOverlay) {
+        userHelpCloseBtn.addEventListener('click', () => userHelpOverlay.classList.remove('visible'));
+    }
+
+    // Help to Settings Quick Button
+    const helpToSettingsBtn = $('#help-to-settings-btn');
+    if (helpToSettingsBtn) {
+        helpToSettingsBtn.addEventListener('click', () => {
+            if (userHelpOverlay) userHelpOverlay.classList.remove('visible');
+            setTimeout(() => {
+                if (settingsOverlay) settingsOverlay.classList.add('visible');
+            }, 300);
+        });
+    }
+
     accentColorPicker = $('#accent-color-picker');
     dropZone = $('#drop-zone'); toggleEnableDrag = $('#toggle-enable-drag'); toggleUseCustomColor = $('#toggle-use-custom-color');
     accentColorContainer = $('#accent-color-container');
@@ -1496,8 +1816,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const trebleResetBtn = $('#treble-boost-reset-btn');
     const reverbResetBtn = $('#reverb-reset-btn');
 
-    const overlays = [settingsOverlay, libraryOverlay, downloaderOverlay, editTitleOverlay, confirmDeleteOverlay];
-    overlays.forEach(ov => { if (ov) ov.addEventListener('click', (e) => { if (e.target === ov) ov.classList.remove('visible'); }); });
+    const overlays = [settingsOverlay, libraryOverlay, downloaderOverlay, editTitleOverlay, confirmDeleteOverlay, document.getElementById('dev-modal-overlay'), document.getElementById('user-help-overlay')];
+    overlays.forEach(ov => { 
+        if (ov) {
+            const modal = ov.querySelector('.settings-modal');
+            const header = ov.querySelector('.settings-header');
+            if (modal && header) makeDraggable(modal, header);
+
+            ov.addEventListener('click', (e) => { 
+                if (e.target === ov) {
+                    ov.classList.remove('visible');
+                    // Reset position after fade out
+                    setTimeout(() => {
+                        if (modal) {
+                            modal.style.position = '';
+                            modal.style.top = '';
+                            modal.style.left = '';
+                            modal.style.transform = '';
+                            modal.style.margin = '';
+                        }
+                    }, 300);
+                }
+            }); 
+        }
+    });
+
+    // Also reset on specific close buttons
+    document.querySelectorAll('.close-modal-btn, #settings-close-btn, #edit-title-cancel-btn, #confirm-delete-cancel-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const ov = btn.closest('.overlay-container');
+            if (ov) {
+                const modal = ov.querySelector('.settings-modal');
+                setTimeout(() => {
+                    if (modal) {
+                        modal.style.position = '';
+                        modal.style.top = '';
+                        modal.style.left = '';
+                        modal.style.transform = '';
+                        modal.style.margin = '';
+                    }
+                }, 300);
+            }
+        });
+    });
 
     setupAudioEvents(); setupEventListeners(); setupVisualizer();
 

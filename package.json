@@ -1,7 +1,7 @@
 {
   "name": "novawave",
-  "version": "2.4.9",
-  "description": "Moderner Musik-Player mit YouTube-Downloader",
+  "version": "2.5.0",
+  "description": "NovaWave Music Player",
   "main": "main.js",
   "author": "SnuggleDino",
   "license": "MIT",

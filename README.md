@@ -1,94 +1,77 @@
 # 🌊 NovaWave Music Player
 
-![Version](https://img.shields.io/badge/Version-2.4.9-38bdf8?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.5.0-c1d37f?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Open--Source-4ade80?style=for-the-badge)
 ![Author](https://img.shields.io/badge/Author-SnuggleDino-fbbf24?style=for-the-badge)
 
-NovaWave is a professional, high-performance music player built with Electron. It combines local playback with a powerful YouTube downloader and advanced audio processing features.
+NovaWave is a professional, high-performance music player built with Electron. It combines high-fidelity local playback with a powerful YouTube downloader and advanced audio processing.
 
 ***
 
-## 🇺🇸 English
+## 🌟 What's New in v2.5.0?
 
-### 🚀 <span style="color: #38bdf8;">Key Features</span>
-*   🔵 **Local Playback:** High-fidelity playback for MP3, M4A, FLAC, WAV, and OGG.
-*   🔴 **YouTube Downloader:** Built-in downloader via `yt-dlp` including thumbnails and metadata.
-*   🟣 **Modern UI:** Sleek glassmorphism interface with multiple themes (Blue, Dark, Dino, Xmas, Blurple, Rose).
-*   ⚪ **Mini-Player:** Compact mode for minimalistic control.
-*   ⚫ **Cinema Mode:** Dims the UI to maximize focus on the visual experience.
+*   ✨ **Snuggle Time (Theme-Pack):** An exclusive, curated experience featuring warm spring colors, "Loving Dinos" cover art, and a fixed Retro-Pixel visualizer with Snowfall effects.
+*   🔲 **Panorama Help Modal:** A redesigned, wide-screen landscape help menu for better readability and detailed control information.
+*   🖱️ **Draggable Modals:** All settings and info windows can now be freely moved around the screen by grabbing their headers.
+*   🛠️ **Developer Console:** New hidden debug features for performance monitoring and real-time window size analysis.
+*   📏 **Ultra-Responsive Layout:** Improved grid system that fluently handles extreme window sizes and orientations.
+
+***
+
+## 🚀 Key Features
+
+*   🔵 **Local Playback:** High-fidelity support for MP3, M4A, FLAC, WAV, and OGG.
+*   🔴 **YouTube Downloader:** Built-in engine via `yt-dlp` including automated metadata tagging and thumbnail embedding.
+*   🟣 **Glassmorphism UI:** A sleek, modern interface with multiple themes and custom accent color support.
+*   ⚪ **Mini-Player:** A redesigned, compact mode that stays on top and focuses on the essentials.
+*   ⚫ **Cinema Mode:** A focus mode that dims non-essential UI elements for an immersive visual experience.
 *   ⭐ **Favorites:** Mark your top tracks and filter your playlist instantly.
-*   🟢 **Drag & Drop:** Easily add music by dragging files into the player.
+*   🟢 **Drag & Drop:** Add music files or entire folders simply by dragging them into the player.
 
-### 🎧 <span style="color: #fbbf24;">Audio Extras</span>
-*   🔊 **Bass Boost:** Powerful low-end enhancement.
-*   ✨ **Crystalizer:** Enhances clarity for the finest sonic details.
-*   🌌 **Reverb:** Spatial reverb effect for an immersive soundscape.
-*   🎯 **Unified Indicator:** A smart badge on the cover shows active effects on hover.
-*   ⏩ **Speed Control:** Adjustable playback speed from 0.5x to 2.0x.
+## 🎧 Audio & Performance
 
-### ⚡ <span style="color: #ef4444;">Performance</span>
-*   🏝️ **Dynamic Island:** Proactive lag detection and warnings.
-*   🔋 **Performance Mode:** Resource-saving mode that disables animations.
-*   📊 **System Stats:** Real-time display of FPS, frame time, and stability.
-*   🎮 **FPS Limit:** Manual frame rate control (15 - 120 FPS).
+*   🔊 **Audio FX:** Professional Bass Boost, Crystalizer (Treble Enhancement), and Spatial Reverb.
+*   🏝️ **Dynamic Island:** Proactive performance monitoring system inspired by modern mobile interfaces.
+*   📊 **System Stats:** Live monitoring of FPS, frame time, and stability (Toggle with `CTRL + 1 + H`).
+*   🎮 **FPS Limit:** Control your system resources by limiting the frame rate (15 - 120 FPS).
 
 ***
 
-## 🇩🇪 Deutsch (German)
+## ⌨️ Controls & Hotkeys
 
-### 🚀 <span style="color: #38bdf8;">Hauptfunktionen</span>
-*   🔵 **Lokale Wiedergabe:** Kristallklarer Sound für MP3, M4A, FLAC, WAV und OGG.
-*   🔴 **YouTube Downloader:** Integrierter Download via `yt-dlp` mit Thumbnails und Metadaten.
-*   🟣 **Modernes UI:** Glassmorphism-Design mit verschiedenen Themes (Blau, Dark, Dino, Xmas, Blurple, Rose).
-*   ⚪ **Mini-Player:** Kompakter Modus für platzsparende Musiksteuerung.
-*   ⚫ **Kino-Modus:** Dimmt das Interface für vollen Fokus auf das Artwork.
-*   ⭐ **Favoriten:** Markiere deine Top-Titel und filtere deine Playlist blitzschnell.
-*   🟢 **Drag & Drop:** Einfaches Hinzufügen von Dateien durch Ziehen ins Fenster.
+### Standard
+*   `Space`: Play / Pause
+*   `Arrow Right / Left`: Next / Previous track
+*   `Arrow Up / Down`: Volume control
+*   `Shift + Arrow`: Seek 5 seconds forward / backward
 
-### 🎧 <span style="color: #fbbf24;">Audio-Extras</span>
-*   🔊 **Bass Boost:** Kraftvolle Tiefenverstärkung.
-*   ✨ **Crystalizer:** Höhere Klarheit für die feinsten Details im Klang.
-*   🌌 **Reverb:** Räumlicher Hall für ein immersives Hörerlebnis.
-*   🎯 **Unified Indicator:** Ein intelligentes Badge am Cover zeigt aktive Effekte per Hover an.
-*   ⏩ **Speed Control:** Variable Abspielgeschwindigkeit (0.5x - 2.0x).
-
-### ⚡ <span style="color: #ef4444;">Performance</span>
-*   🏝️ **Dynamic Island:** Warnt proaktiv bei System-Lags.
-*   🔋 **Performance Mode:** Spart Ressourcen durch Deaktivierung von Animationen.
-*   📊 **System-Stats:** Live-Anzeige von FPS, ms und Stabilität.
-*   🎮 **FPS-Limit:** Manuelle Begrenzung der Bildrate (15 - 120 FPS).
+### Developer & Debug
+*   `CTRL + 1`: Open Developer & Hotkey Info
+*   `CTRL + 1 + H`: Toggle Window Size Debug (Live Dimensions)
+*   `CTRL + 1 + X`: Manually trigger Performance Hint
 
 ***
 
-## 💻 Installation & Setup
+## 💻 Installation
 
-> **Note:** To run this project, you need [Node.js](https://nodejs.org/) and [Git](https://git-scm.com/) installed on your system.
+> **Note:** Requires [Node.js](https://nodejs.org/) and [Git](https://git-scm.com/) installed on your system.
 
-### 🛠️ Launch Sequence
-
-**1. Clone the Repository**
-```bash
-git clone https://github.com/Refreryo/Musik-Player_v2
-```
-
-**2. Navigate to Workspace**
-```bash
-cd (your_workspace or folder)
-```
-
-**3. Initialize Engine (Install Dependencies)**
-```bash
-npm install
-```
-
-**4. Ignite NovaWave**
-```bash
-npm start
-```
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/SnuggleDino/Musik-Player_v2
+   ```
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+3. **Launch NovaWave**
+   ```bash
+   npm start
+   ```
 
 ***
 
 **🛠 Technical Stack:** Electron, music-metadata, node-id3, yt-dlp-wrap, electron-store.  
-**📦 Version:** 2.4.9  
+**📦 Version:** 2.5.0  
 **👤 Author:** SnuggleDino  
-**🕒 Last Modified:** Sunday, December 28, 2025
+**🕒 Last Updated:** Monday, December 29, 2025
